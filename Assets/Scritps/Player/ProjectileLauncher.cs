@@ -4,15 +4,39 @@ using UnityEngine;
 
 public class ProjectileLuncher : MonoBehaviour
 {
-    private Coroutine fireCoroutine;
+    private float fireaAngle;
+    public float projectileSpeed;
+    [HideInInspector] public int area;
+    public Projectile projectile;
 
-    private void Start()
+    public void Start()
     {
-       fireCoroutine = StartCoroutine(FireCoroutine());
+         //yield return null;
+        //Fire();
     }
-
-    public IEnumerator FireCoroutine()
+    public void Fire()
     {
-        yield return null;
+        Debug.Log("런처 Fire 메서드 확인용 로그");
+
+        if (area == 0)
+        {
+
+        }
+        else if (area == 1)
+        {
+
+        }
+        else
+        {
+
+        }
+
+        Projectile proj = Instantiate(projectile, transform.position, transform.rotation);
+
+        proj.transform.position = gameObject.transform.position;
+        proj.transform.rotation = gameObject.transform.rotation;
+
+        proj.damage = GameManager.Instance.player.damage;
+        proj.projectileSpeed = this.projectileSpeed;
     }
 }

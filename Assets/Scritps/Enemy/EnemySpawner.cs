@@ -29,8 +29,8 @@ public class EnemySpawner : MonoBehaviour
         for (int i = 0; i < enemyCount; i++)
         {
             //함수가 호출될 때 마다 다른 랜덤 좌표를 선택
-            float spawnPosX = Random.Range(randomPosX.x, randomPosY.y);
-            float spawnPosY = Random.Range(randomPosY.x, randomPosX.y);
+            float spawnPosX = Random.Range(randomPosX.x, randomPosX.y);
+            float spawnPosY = Random.Range(randomPosY.x, randomPosY.y);
             Vector2 spawnPos = new Vector2(transform.position.x + spawnPosX,
                 transform.position.y + spawnPosY);
 

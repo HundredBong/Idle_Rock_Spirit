@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -10,12 +8,10 @@ public class Enemy : MonoBehaviour
     [SerializeField, Header("이동 속도")] private float moveSpeed;
     [SerializeField, Header("공격력")] private float damage;
     [SerializeField, Header("도착 지점 X값")] private float arrivePosX;
+    [SerializeField, Header("공격에 사용할 프리팹")]public GameObject projectilePrefab;
 
     //목표로 이동할 타겟
     private Transform target;
-
-    //공격에 필요한 투사체 프리팹
-    public EnemyProjectile projectilePrefab;
 
     private IEnumerator Start()
     {
@@ -45,12 +41,14 @@ public class Enemy : MonoBehaviour
         //플레이어와 enemy의 x축의 거리를 측정함
         float distance =
             GameManager.Instance.player.transform.position.x - transform.position.x;
-        Debug.Log($"Distance : {distance}");
+
+       // Debug.Log($"Distance : {distance}");
 
         //distance가 도착지점보다 크다면 즉, 아직 도착하지 않았다면
         if (Mathf.Abs(distance) > arrivePosX)
         {
             //플레이어 쪽으로 움직이는 Move 메서드를 실행함
+            //정규화되서 방향만 남은 벡터를 인자로 전달함
             Move(moveDir.normalized);
         }
 
@@ -60,16 +58,6 @@ public class Enemy : MonoBehaviour
             //플레이어를 공격하는 Attack 메서드를 실행함
             Attack();
         }
-
-
-        //정규화되서 방향만 남은 벡터를 인자로 전달함
-        
-    }
-
-    private void FixedUpdate()
-    {
-
-
     }
 
     private void Move(Vector2 dir)
@@ -82,10 +70,10 @@ public class Enemy : MonoBehaviour
     private void Attack()
     {
         //자기 자신의 위치에 프리팹을 생성함
-        EnemyProjectile projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+        //EnemyProjectile projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
 
         //투사체 대미지를 자신의 대미지로 설정
-        projectile.damage = this.damage;
+        //projectile.damage = this.damage;
     }
 
     public void TakeDamage(float damage)
@@ -102,6 +90,7 @@ public class Enemy : MonoBehaviour
 
     public void Death()
     {
+        GameManager.Instance.enemies.Remove(this);
         Destroy(gameObject);
     }
 }
