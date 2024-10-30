@@ -42,6 +42,8 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (hasCollided == true) { return; }
+
         if (other.TryGetComponent(out Enemy enemy))
         {
             //enemy의 TakeDamage 메서드 실행후 삭제

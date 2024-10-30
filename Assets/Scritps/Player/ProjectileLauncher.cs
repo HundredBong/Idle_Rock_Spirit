@@ -9,28 +9,31 @@ public class ProjectileLuncher : MonoBehaviour
     [HideInInspector] public int area;
     public Projectile projectile;
 
+    private Enemy targetEnemy = null;
+    private float targetDistance = float.MaxValue;
+
     public void Start()
     {
-         //yield return null;
+        //yield return null;
         //Fire();
     }
     public void Fire()
     {
-        Debug.Log("런처 Fire 메서드 확인용 로그");
-
-        if (area == 0)
+        foreach (Enemy enemy in GameManager.Instance.enemies)
         {
+            if (enemy == null) { continue; }
+            float distance = Vector3.Distance(enemy.transform.position, transform.position);
+            if (distance < targetDistance)
+            {
+                targetEnemy = enemy;
+                targetDistance = distance;
+                //Debug.Log($"가장 가까운 적 : {targetEnemy.name}");
+                //Debug.Log($"가장 가까운 적 : {Mathf.Abs(targetDistance)}");
+            }
+            Debug.Log($"가장 가까운 적 : {Mathf.Abs(targetDistance)}");
 
+            projectileSpeed = (1.21f) * distance + (3.29f);
         }
-        else if (area == 1)
-        {
-
-        }
-        else
-        {
-
-        }
-
         Projectile proj = Instantiate(projectile, transform.position, transform.rotation);
 
         proj.transform.position = gameObject.transform.position;

@@ -27,6 +27,9 @@ public class Player : MonoBehaviour
 
     private List<Skill> skill;
 
+
+    private Enemy targetEnemy = null;
+    private float targetDistance = float.MaxValue;
     public void Start()
     {
         //다른 객체가 참조할 수 있도록 게임매니저의 플레이어를 오브젝트로 설정
@@ -38,12 +41,14 @@ public class Player : MonoBehaviour
         //체력 재생 관련 변수 초기화
         preRegenTime = 0;
         regenInterval = 5;
-        StartCoroutine(SerchTarget());
+        StartCoroutine(FireCoroutine());
+
     }
 
     public void Update()
     {
         HealthRegeneration();
+        SerchTarget();
     }
 
     public void TakeDamage(float damage)
@@ -86,58 +91,41 @@ public class Player : MonoBehaviour
         preRegenTime = Time.time;
     }
 
-    //private IEnumerator AttackCoroutine()
-    //{
-    //    //TODO : foreach문으로 리스트를 탐색하고 enemy와의 거리가 일정 값 이하일때만 실행되게 하는 로직 작성하기
-    //    //TODO : Projectile에서 몬스터 방향으로 발사되는 공식 작성하기
-
-    //    //플레이어 오브젝트가 해야할 일 : 투사체 발사 각도 조절
-
-    //    //가장 가까운 적을 탐색하기 위한 변수 초기화
-
-    //    //플레이어와 가장 가까운 적을 탐색함
-    //적의 거리에 따라 구역 지정해줌, 런처는 지정한 구역으로 발사할수있게 투사체 속도와 각도를 조절
-    //
-    //    //런처가 해야하는 이유 : 여기서 각도 돌리면 플레이어가 돌아감
-    //    //런처는 설정한 투사체의 속도와 각도로 투사체를 발사함
-
-    //}
-
-    private IEnumerator SerchTarget()
+    protected void SerchTarget()
     {
+        //게임매니저의 enemy 리스트에서 적을 탐색
+        foreach (Enemy enemy in GameManager.Instance.enemies)
+        {
+            //enemmy에 접근했을때 null이면 예외가 발생하므로 null일시 루프를 건너뜀
+            if (enemy == null) { continue; }
+
+            //foreach문을 순회할 때 마다 enemy와 플레이어와의 거리를 측정
+            float distance = Vector3.Distance(enemy.transform.position, transform.position);
+
+            //현재 enemy와의 거리가 지정한 거리보다 가까우면
+            if (distance < targetDistance)
+            {
+                //타겟을 설정하고, distance를 초기화
+                targetEnemy = enemy;
+                targetDistance = distance;
+                //Debug.Log($"가장 가까운 적 : {targetEnemy.name}");
+                //Debug.Log($"가장 가까운 적 : {Mathf.Abs(targetDistance)}");
+            }
+        }
+    }
+
+    private IEnumerator FireCoroutine()
+    {
+        Debug.Log($"코루틴 실행됨 {GameManager.Instance.enemies.Count}");
         while (true)
         {
-
-
-            //게임매니저의 enemy 리스트에서 적을 탐색
-            foreach (Enemy enemy in GameManager.Instance.enemies)
+            //enemies 리스트에 적이 없다면 아래 코드를 실행하지 않음
+            if (GameManager.Instance.enemies.Count != 0)
             {
-                Enemy targetEnemy = null;
-                float targetDistance = float.MaxValue;
-                //enemmy에 접근했을때 null이면 예외가 발생하므로 null일시 루프를 건너뜀
-                if (enemy == null) { continue; }
-
-                //foreach문을 순회할 때 마다 enemy와 플레이어와의 거리를 측정
-                float distance = Vector3.Distance(enemy.transform.position, transform.position);
-
-                //현재 enemy와의 거리가 지정한 거리보다 가까우면
-                if (distance < targetDistance)
-                {
-                    //타겟을 설정하고, distance를 초기화
-                    targetEnemy = enemy;
-                    targetDistance = distance;
-                    Debug.Log($"가장 가까운 적 : {targetEnemy.name}");
-                    Debug.Log($"가장 가까운 적 : {Mathf.Abs(targetDistance)}");
-                }
-
-
-                //거리에 따라 구역 설정후 런처가 이를 참고하여 발사각 조절
-                if (distance < 1) { launcher.area = 0; }
-                else if (distance < 0) { launcher.area = 1; }
-                else { launcher.area = 2; }
-
+                if (targetDistance <= 4.8f) 
+                    launcher.Fire();
             }
-            launcher.Fire();
+            //공격 쿨타임동안 대기후 코드 재실행
             yield return new WaitForSeconds(attackInterval);
         }
     }
