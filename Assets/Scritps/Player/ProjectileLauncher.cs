@@ -19,10 +19,13 @@ public class ProjectileLuncher : MonoBehaviour
     }
     public void Fire()
     {
+        targetEnemy = null;
+        targetDistance = float.MaxValue;
+
         foreach (Enemy enemy in GameManager.Instance.enemies)
         {
             if (enemy == null) { continue; }
-            float distance = Vector3.Distance(enemy.transform.position, transform.position);
+            float distance = Mathf.Abs(enemy.transform.position.x - GameManager.Instance.player.transform.position.x);
             if (distance < targetDistance)
             {
                 targetEnemy = enemy;
@@ -32,7 +35,7 @@ public class ProjectileLuncher : MonoBehaviour
             }
             Debug.Log($"가장 가까운 적 : {Mathf.Abs(targetDistance)}");
 
-            projectileSpeed = (1.21f) * distance + (3.29f);
+            projectileSpeed = (1.21f) * targetDistance + (3.29f);
         }
         Projectile proj = Instantiate(projectile, transform.position, transform.rotation);
 
@@ -41,5 +44,31 @@ public class ProjectileLuncher : MonoBehaviour
 
         proj.damage = GameManager.Instance.player.damage;
         proj.projectileSpeed = this.projectileSpeed;
+    }
+
+    private float SerchTarget()
+    {
+        targetEnemy = null;
+        targetDistance = float.MaxValue;
+        //게임매니저의 enemy 리스트에서 적을 탐색
+        foreach (Enemy enemy in GameManager.Instance.enemies)
+        {
+            //enemmy에 접근했을때 null이면 예외가 발생하므로 null일시 루프를 건너뜀
+            if (enemy == null) { continue; }
+
+            //foreach문을 순회할 때 마다 enemy와 플레이어와의 거리를 측정
+            float distance = Mathf.Abs(enemy.transform.position.x - GameManager.Instance.transform.position.x);
+
+            //현재 enemy와의 거리가 지정한 거리보다 가까우면
+            if (distance < targetDistance)
+            {
+                //타겟을 설정하고, distance를 초기화
+                targetEnemy = enemy;
+                targetDistance = distance;
+                //Debug.Log($"가장 가까운 적 : {targetEnemy.name}");
+                //Debug.Log($"가장 가까운 적 : {Mathf.Abs(targetDistance)}");
+            }
+        }
+        return targetDistance;
     }
 }

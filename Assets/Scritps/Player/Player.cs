@@ -20,13 +20,12 @@ public class Player : MonoBehaviour
     //마지막으로 체력을 재생한 시간
     private float preRegenTime;
 
-    //투사체를 발사할 영역 설정
-    [HideInInspector] public int fireArea;
-
     ProjectileLuncher launcher;
 
     private List<Skill> skill;
 
+    //공격할수 있는지 판단하기위한 bool변수
+    internal bool attackAble;
 
     private Enemy targetEnemy = null;
     private float targetDistance = float.MaxValue;
@@ -48,7 +47,6 @@ public class Player : MonoBehaviour
     public void Update()
     {
         HealthRegeneration();
-        SerchTarget();
     }
 
     public void TakeDamage(float damage)
@@ -91,8 +89,11 @@ public class Player : MonoBehaviour
         preRegenTime = Time.time;
     }
 
-    protected void SerchTarget()
+    private float SerchTarget()
     {
+        targetEnemy = null;
+        targetDistance = float.MaxValue;
+
         //게임매니저의 enemy 리스트에서 적을 탐색
         foreach (Enemy enemy in GameManager.Instance.enemies)
         {
@@ -100,7 +101,7 @@ public class Player : MonoBehaviour
             if (enemy == null) { continue; }
 
             //foreach문을 순회할 때 마다 enemy와 플레이어와의 거리를 측정
-            float distance = Vector3.Distance(enemy.transform.position, transform.position);
+            float distance = Mathf.Abs(enemy.transform.position.x - transform.position.x);
 
             //현재 enemy와의 거리가 지정한 거리보다 가까우면
             if (distance < targetDistance)
@@ -109,24 +110,39 @@ public class Player : MonoBehaviour
                 targetEnemy = enemy;
                 targetDistance = distance;
                 //Debug.Log($"가장 가까운 적 : {targetEnemy.name}");
-                //Debug.Log($"가장 가까운 적 : {Mathf.Abs(targetDistance)}");
+                Debug.Log($"가장 가까운 적 : {Mathf.Abs(targetDistance)}");
             }
         }
+
+
+        return targetDistance;
     }
 
     private IEnumerator FireCoroutine()
     {
-        Debug.Log($"코루틴 실행됨 {GameManager.Instance.enemies.Count}");
+
         while (true)
         {
+            SerchTarget();
+
+            if (targetDistance <= 4.8f)
+                attackAble = true;
+            else
+                attackAble = false;
+            Debug.Log($"AttackAble {targetDistance}");
+            //Debug.Log($"코루틴 실행됨 {GameManager.Instance.enemies.Count}");
+
+            Debug.Log($"AttackAble : {attackAble}");
+
             //enemies 리스트에 적이 없다면 아래 코드를 실행하지 않음
             if (GameManager.Instance.enemies.Count != 0)
             {
-                if (targetDistance <= 4.8f) 
+                if (targetDistance <= 4.8f && attackAble == true)
                     launcher.Fire();
             }
             //공격 쿨타임동안 대기후 코드 재실행
             yield return new WaitForSeconds(attackInterval);
         }
+
     }
 }

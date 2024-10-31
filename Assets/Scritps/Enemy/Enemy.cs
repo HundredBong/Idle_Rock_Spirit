@@ -1,17 +1,23 @@
 using System.Collections;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class Enemy : MonoBehaviour
 {
     [SerializeField, Header("체력")] public float health;
     [Header("최대 체력")] private float maxHealth;
     [SerializeField, Header("이동 속도")] private float moveSpeed;
+    [SerializeField, Header("공격 속도")] private float attackInterval;
+    //마지막으로 공격한 시간 
+    private float preAttackTime;
     [SerializeField, Header("공격력")] private float damage;
     [SerializeField, Header("도착 지점 X값")] private float arrivePosX;
-    [SerializeField, Header("공격에 사용할 프리팹")]public GameObject projectilePrefab;
-
+    [SerializeField, Header("공격에 사용할 프리팹")] private EnemyProjectile enemyProjectile;
     //목표로 이동할 타겟
     private Transform target;
+
+    //체력바 이미지, 프로퍼티
+    [Header("체력바에 사용할 이미지")] public Image healthBar;
+    public float healthAmount { get { return health / maxHealth; } }
 
     private IEnumerator Start()
     {
@@ -33,7 +39,7 @@ public class Enemy : MonoBehaviour
     }
 
     private void Update()
-    {  
+    {
         //플레이어 위치 - 내 위치 = 내가 이동해야 할 방향
         Vector2 targetPos = GameManager.Instance.player.transform.position;
         Vector2 moveDir = new Vector2(targetPos.x - transform.position.x, 0);
@@ -42,7 +48,7 @@ public class Enemy : MonoBehaviour
         float distance =
             GameManager.Instance.player.transform.position.x - transform.position.x;
 
-       // Debug.Log($"Distance : {distance}");
+        // Debug.Log($"Distance : {distance}");
 
         //distance가 도착지점보다 크다면 즉, 아직 도착하지 않았다면
         if (Mathf.Abs(distance) > arrivePosX)
@@ -69,17 +75,28 @@ public class Enemy : MonoBehaviour
 
     private void Attack()
     {
+
+        if (preAttackTime + attackInterval > Time.time)
+            return;
+
         //자기 자신의 위치에 프리팹을 생성함
-        //EnemyProjectile projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+        EnemyProjectile enemyProj = Instantiate(enemyProjectile, transform.position, Quaternion.identity);
 
         //투사체 대미지를 자신의 대미지로 설정
-        //projectile.damage = this.damage;
+        enemyProj.damage = this.damage;
+
+        preAttackTime = Time.time;
+
+
     }
 
     public void TakeDamage(float damage)
     {
         //체력을 인자로 들어온 damage만큼 감소시킴
         health = health - damage;
+
+        //감소된 체력만큼 체력바 업데이트
+        healthBar.fillAmount = healthAmount;
 
         //감소시켰을 때 체력이 0이하라면 Death메서드 실행
         if (health <= 0)
