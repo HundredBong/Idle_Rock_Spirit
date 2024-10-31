@@ -4,35 +4,48 @@ using UnityEngine;
 
 public class Skill2_Projectile : MonoBehaviour
 {
-    public float damage;
-    public float projectileSpeed;
-    public float attackInterval;
-    private float preAttackTime;
+    internal float projectileDamage; //투사체 대미지
+    internal float projectileSpeed; //투사체 이동속도
+    internal float attackInterval; //투사체 공격 간격
+    private float preAttackTime; //공격 간격 계산용 마지막으로 공격한 시간 
+    internal int attackCount; //투사체 공격 횟수
+    internal float projectileDuration; //투사체 지속 시간
 
+    //오버랩용 캡슐 콜라이더
     private CircleCollider2D coll;
-    void Start()
+
+    private void Awake()
     {
         coll = GetComponent<CircleCollider2D>();
     }
 
-    void Update()
+    private void Start()
     {
-        transform.Translate(Vector3.right*projectileSpeed*Time.deltaTime);
+        Destroy(gameObject, projectileDuration);
+    }
+
+    private void Update()
+    {
+        transform.Translate(Vector3.right * projectileSpeed * Time.deltaTime);
     }
 
     private void OnTriggerStay2D(Collider2D other)
     {
+        if (preAttackTime + attackInterval > Time.time) { return; }
 
-        //if (preAttackTime + attackInterval > Time.time) return;
-        Debug.Log($"보이드1 {this.damage}");
-
-        if (other.TryGetComponent(out Enemy enemy))
+        Collider2D[] contactedEnemies = Physics2D.OverlapCircleAll(transform.position, coll.radius);
+        foreach (Collider2D ContactedEnemy in contactedEnemies)
         {
-            Debug.Log($"보이드21 {this.damage}");
-
-            enemy.TakeDamage(damage);
-            preAttackTime = Time.time;
-            Debug.Log($"보이드22 {this.damage}");
+            if (ContactedEnemy.TryGetComponent(out Enemy enemy))
+            {
+                enemy.TakeDamage(projectileDamage);
+                attackCount--;
+                if (attackCount <= 0)
+                {
+                    Destroy(gameObject);
+                }
+            }
         }
+        preAttackTime = Time.time;
     }
 }

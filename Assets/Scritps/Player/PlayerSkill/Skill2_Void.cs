@@ -4,36 +4,56 @@ using UnityEngine;
 
 public class Skill2_Void : MonoBehaviour
 {
-    public float damage;
-    public float projectileSpeed;
-    public float attackInterval;
-    private float preAttackTime;
+    [SerializeField, Header("스킬에 사용할 프리팹")] private Skill2_Projectile skill2_Projectile;
+    private float projectileDamage; //투사체의 대미지
+    [SerializeField, Header("기본공격 대비 대미지 배율(1.2)")] private float damageMultiplier;
+    [SerializeField, Header("투사체가 날아갈 속도")] private float projectileSpeed;
+    [SerializeField, Header("투사체의 공격 간격")] private float attackInterval;
+    [SerializeField, Header("투사체의 공격 횟수(10)")] private int attackCount;
+    [SerializeField, Header("스킬 쿨타임(5)")] private float fireInterval;
+    [SerializeField, Header("스킬 지속시간)"),
+        Tooltip("투사체 속도에 맞게 적절히 조절")] private float projectileDuration;
+    private float preFireTime; //쿨타임 계산용 마지막으로 발사한 시간 
 
-    public float fireInterval;
+    //EnemyUtil을 사용하기 위한 변수
+    private Enemy targetEnemy;
+    private Vector3 closestEnemyPosition;
+    private float closestEnemyDistance;
 
-    public Skill2_Projectile skill2_Projectile;
     //기획서 : 천천히가 어느정도 천천히 이동하는건가요
     //이동하는 오브젝트가 플레이어 투사체, enemy, 스킬 1,2,3,4 가 있는데 누구를 기준으로 잡을까요
     //이동하며 닿으면 한 번 피해를 주나요 아니면 닿는 동안 계속 피해를 주나요
-    //한 번 피해를 주면 얘는 재수없으면 10회 타격 못해서 없어지는 조건이 없어지는데 언제 없어져야 하나요
+    //만약 10회의 피해를 못주면 오브젝트는 언제 없어져야하나요
     //닿는 동안 계속 피해를 주면 피해를 주는 텀은 어떻게 되나요
-    
-    
+
     private void Start()
     {
-        StartCoroutine(FireCoroutine());
+        if (closestEnemyDistance <= GameManager.Instance.player.attackRange) { Fire(); }
     }
 
-    public IEnumerator FireCoroutine()
+    private void Update()
     {
-        while (true)
-        {
-            Skill2_Projectile proj = Instantiate(skill2_Projectile, transform.position, Quaternion.identity);
-            proj.damage = this.damage;
-            proj.projectileSpeed = this.projectileSpeed;
-            proj.attackInterval = this.attackInterval;
+        Fire();
+    }
 
-            yield return new WaitForSeconds(fireInterval);
-        }
+    private void Fire()
+    {
+        //쿨타임 재보고 안되면 리턴
+        if (preFireTime + fireInterval > Time.time) { return; }
+        //쿨타임 됐는데 사거리가 안되면 리턴
+        closestEnemyDistance = EnemyUtility.GetTargetDistance(transform, out targetEnemy);
+        if (GameManager.Instance.player.attackRange <= closestEnemyDistance) { return; }
+
+        projectileDamage = GameManager.Instance.player.damage * damageMultiplier;
+
+        Skill2_Projectile proj = Instantiate(skill2_Projectile, transform.position, Quaternion.identity);
+
+        proj.projectileDamage = this.projectileDamage;
+        proj.projectileSpeed = this.projectileSpeed;
+        proj.attackInterval = this.attackInterval;
+        proj.attackInterval = this.attackInterval;
+        proj.attackCount = this.attackCount;
+        proj.projectileDuration = this.projectileDuration;
+        preFireTime = Time.time;
     }
 }

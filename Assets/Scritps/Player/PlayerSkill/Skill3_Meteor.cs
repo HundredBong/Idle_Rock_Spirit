@@ -17,13 +17,14 @@ public class Skill3_Meteor : MonoBehaviour
     //카메라 화면 상단이라 했는데 그럼 메테오가 오른쪽에서 떨어질 수도 있나요
     //카메라 화면 상단이면 카메라가 보는 곳에서 생성되나요 그래도 메테오인데
     //메테오는 언제 없어져야 하나요 
+
     private void Start()
     {
         StartCoroutine(FireCoroutine());
     }
     private void Update()
     {
-        Vector3 closestEnemyPosition = EnemyUtility.SearchTargetPosition(transform, out targetEnemy);
+        Vector3 closestEnemyPosition = EnemyUtility.GetTargetPosition(transform, out targetEnemy);
         if(GameManager.Instance.enemies != null)
             gameObject.transform.position = closestEnemyPosition;
     }

@@ -5,12 +5,21 @@ using UnityEngine.UI;
 
 public class Skill4_Thunder : MonoBehaviour
 {
-    private Enemy targetEnemy;
-    public int thunderCount;
-    public Skill4_Projectile projtilePrefab;
+    [SerializeField, Header("스킬에 사용할 프리팹")] private Skill4_Projectile projtilePrefab;
+    [SerializeField, Header("생성할 투사체 개수(8)")] private int thunderCount;
+    private float projectileDamage; //투사체의 대미지
+    [SerializeField, Header("기본공격 대비 대미지 배율(1)")] private float damageMultiplier;
+    [SerializeField, Header("투사체가 떨어지는 속도")] private float projectileSpeed;
+    [SerializeField, Header("투사체가 떨어지는 간격")] private float innerInterval;
+    [SerializeField, Header("스킬 쿨타임(5)"),Tooltip("번개가 다 떨어지고 나서 쿨타임이 돌게 설정해 놓은" +
+        "상태이므로 실제 쿨타임은 쿨타임 + (투사체 간격 * 투사체 개수)")] private float fireInterval;
+    private float preFireTime; //쿨타임 계산용 마지막으로 발사한 시간
 
-    public float projectileDamage;
-    public float projectileSpeed;
+    //EnemyUtil을 사용하기 위한 변수
+    private Enemy targetEnemy;
+    private Vector3 closestEnemyPosition;
+
+
     //스프라이트 렌더러로 사기칠 예정
     //리스트에 있는 enemy중 가장 가까운 enemy를 찾아서 
     //데가리 위에 콜라이더는 작지만 렌더러는 크고 길쭉한걸로 소환하기
@@ -28,37 +37,33 @@ public class Skill4_Thunder : MonoBehaviour
     //여기서 할 일 : 번개를 가장 가까운 enemy에게 소환함
     //for문 안에서 소환할 번개 개수만큼 SerchEnemy 돌리고 가까운 enemy 위에 소환
     //소환된 번개 projectile은 Start메서드에서 빠르게 아래로 내려감
-    private Vector3 closestEnemyPosition;
-    private float distance;
-
-    public float thunderInterval;
-    private float preThunderTime;
-    public float innerInterval;
-
-
 
     void Start()
     {
+        //projectileDamage = GameManager.Instance.player.damage * damageMultiplier;
+
+        //거리와 관계 없는 스킬이므로 스킬을 배웠을 때 바로 한번 실행
+        Fire();
     }
 
     void Update()
     {
         //가장 가까운 적을 찾음
         if (GameManager.Instance.enemies != null)
-            closestEnemyPosition = EnemyUtility.SearchTargetPosition(transform, out targetEnemy);
+            closestEnemyPosition = EnemyUtility.GetTargetPosition(transform, out targetEnemy);
 
         Fire();
-        Debug.Log($"Thunder.preThunderTime : {preThunderTime}");
+
     }
 
     private void Fire()
     {
-        if (preThunderTime + (thunderInterval + (thunderCount * innerInterval)) > Time.time) { return; }
+        if (preFireTime + (fireInterval + (thunderCount * innerInterval)) > Time.time) { return; }
 
         Debug.Log($"Thunder.Fire메서드 실행됨");
 
         StartCoroutine(FireCoroutine());
-        preThunderTime = Time.time;
+        preFireTime = Time.time;
 
     }
 
@@ -66,9 +71,11 @@ public class Skill4_Thunder : MonoBehaviour
     {
         for (int i = 0; i < thunderCount; i++)
         {
+            projectileDamage = GameManager.Instance.player.damage * damageMultiplier;
+
             Debug.Log($"Thunder.Coroutine {i}번째 루프");
 
-            closestEnemyPosition = EnemyUtility.SearchTargetPosition(transform, out targetEnemy);
+            closestEnemyPosition = EnemyUtility.GetTargetPosition(transform, out targetEnemy);
             Skill4_Projectile proj = Instantiate(projtilePrefab,
                 new Vector3(closestEnemyPosition.x, closestEnemyPosition.y + 4, 0), Quaternion.identity);
 

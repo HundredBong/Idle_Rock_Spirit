@@ -10,16 +10,17 @@ public class Player : MonoBehaviour
     //해상도가 달라지면 공격 범위도 달라지나요
     //유니티의 좌표같은 정보가 없는 상황에서 1돌정령미터는 정말 적절한 비유라고 생각해요
 
-    [SerializeField, Header("체력")] public float health;
-    [SerializeField, Header("최대 체력")] public int maxHealth;
-    [SerializeField, Header("체력 재생")] public float healthRegen;
-    [SerializeField, Header("공격력")] public float damage;
-    [SerializeField, Header("치명타 확률")] public int critlcalChance;
-    [SerializeField, Header("치명타 피해")] public int criticalMultiplier;
-    [SerializeField, Header("공격 속도"), Tooltip("기본값 1.0 = / 1.0s 1초당 1회")] public float attackInterval;
-    [SerializeField, Header("더블 샷")] public int doubleShot;
-    [SerializeField, Header("소지금")] public int gold;
-    [Header("스킬 쿨타임")] public int[] skillIntervals;
+    [SerializeField, Header("체력")] internal float health;
+    [SerializeField, Header("최대 체력")] internal int maxHealth;
+    [SerializeField, Header("체력 재생")] private float healthRegen;
+    [SerializeField, Header("공격력")] internal float damage;
+    [SerializeField, Header("치명타 확률")] private int critlcalChance;
+    [SerializeField, Header("치명타 피해")] private int criticalMultiplier;
+    [SerializeField, Header("공격 속도"), Tooltip("기본값 1.0 = / 1.0s 1초당 1회")] private float attackInterval;
+    [SerializeField, Header("더블 샷")] private int doubleShot;
+    [SerializeField, Header("소지금")] private int gold;
+    [SerializeField, Header("플레이어 공격 반경")] internal float attackRange;
+
     //체력 재생 쿨타임
     private float regenInterval;
 
@@ -31,26 +32,27 @@ public class Player : MonoBehaviour
     private List<Skill> skill;
 
     //공격할수 있는지 판단하기위한 bool변수
-    internal bool attackAble;
+    private bool attackAble;
 
     private Enemy targetEnemy = null;
     private float targetDistance = float.MaxValue;
-    public void Start()
+    private void Awake()
     {
         //다른 객체가 참조할 수 있도록 게임매니저의 플레이어를 오브젝트로 설정
-        //런처를 참조할 수 있도록 런처 초기화
         GameManager.Instance.player = this;
-
+    }
+    private void Start()
+    {
+        //런처를 참조할 수 있도록 런처 초기화
         launcher = GameObject.Find("ProjectileLauncher").GetComponent<ProjectileLuncher>();
 
         //체력 재생 관련 변수 초기화
         preRegenTime = 0;
         regenInterval = 5;
         StartCoroutine(FireCoroutine());
-
     }
 
-    public void Update()
+    private void Update()
     {
         HealthRegeneration();
     }
@@ -69,7 +71,7 @@ public class Player : MonoBehaviour
     }
 
     //체력이 0이하가 됐을때 실행 될 메서드
-    public void Death()
+    private void Death()
     {
         //오브젝트를 비활성화
         //를 하면 게임매니저에서 이거 참조 못하니까 큰일남
@@ -132,7 +134,7 @@ public class Player : MonoBehaviour
         {
             SerchTarget();
 
-            if (targetDistance <= 4.8f)
+            if (targetDistance <= attackRange)
                 attackAble = true;
             else
                 attackAble = false;
@@ -144,7 +146,7 @@ public class Player : MonoBehaviour
             //enemies 리스트에 적이 없다면 아래 코드를 실행하지 않음
             if (GameManager.Instance.enemies.Count != 0)
             {
-                if (targetDistance <= 4.8f && attackAble == true)
+                if (targetDistance <= attackRange && attackAble == true)
                     launcher.Fire();
             }
             //공격 쿨타임동안 대기후 코드 재실행
