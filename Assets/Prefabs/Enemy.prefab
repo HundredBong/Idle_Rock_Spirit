@@ -86,6 +86,7 @@ GameObject:
   - component: {fileID: 1895577258112795546}
   - component: {fileID: 6478121015536381946}
   - component: {fileID: 6820004387411594758}
+  - component: {fileID: -7418436741580777265}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -184,6 +185,33 @@ MonoBehaviour:
   arrivePosX: 1.5
   enemyProjectile: {fileID: 8177744077197636405, guid: 85382db2befb1d44ca7456fc28f0250a, type: 3}
   healthBar: {fileID: 2350429312811877258}
+--- !u!50 &-7418436741580777265
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3039123763970878950}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &3437024038440570876
 GameObject:
   m_ObjectHideFlags: 0

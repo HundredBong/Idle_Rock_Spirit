@@ -4,16 +4,22 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+
+    //기획서 : 더듬이도 히트박스로 넣었던데 무슨 의미가 있나요 너무 정교한건 좋지 않다고 생각해요
+    //공격 범위가 카메라 화면의 3분의 2라고 하셨는데 지금 해상도 2:3 비율에서는 그렇다 치고, 
+    //해상도가 달라지면 공격 범위도 달라지나요
+    //유니티의 좌표같은 정보가 없는 상황에서 1돌정령미터는 정말 적절한 비유라고 생각해요
+
     [SerializeField, Header("체력")] public float health;
     [SerializeField, Header("최대 체력")] public int maxHealth;
     [SerializeField, Header("체력 재생")] public float healthRegen;
-    [SerializeField, Header("공격력")] public int damage;
+    [SerializeField, Header("공격력")] public float damage;
     [SerializeField, Header("치명타 확률")] public int critlcalChance;
     [SerializeField, Header("치명타 피해")] public int criticalMultiplier;
     [SerializeField, Header("공격 속도"), Tooltip("기본값 1.0 = / 1.0s 1초당 1회")] public float attackInterval;
     [SerializeField, Header("더블 샷")] public int doubleShot;
     [SerializeField, Header("소지금")] public int gold;
-
+    [Header("스킬 쿨타임")] public int[] skillIntervals;
     //체력 재생 쿨타임
     private float regenInterval;
 
@@ -66,6 +72,8 @@ public class Player : MonoBehaviour
     public void Death()
     {
         //오브젝트를 비활성화
+        //를 하면 게임매니저에서 이거 참조 못하니까 큰일남
+        //고로 애니메이션만 재생하는걸로
         Destroy(gameObject);
     }
 
@@ -113,7 +121,6 @@ public class Player : MonoBehaviour
                 Debug.Log($"가장 가까운 적 : {Mathf.Abs(targetDistance)}");
             }
         }
-
 
         return targetDistance;
     }
