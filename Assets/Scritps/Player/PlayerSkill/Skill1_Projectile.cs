@@ -8,6 +8,7 @@ public class Skill1_Projectile : MonoBehaviour
     internal float projectileDamage; //투사체 대미지
     internal float projectileSpeed; //투사체 이동속도
     internal float riseTime; //투사체가 올라가는 시간
+    internal float duration; //투사체 지속 시간
     private Vector2 riseDir; //처음에 위로 올라갈 방향
 
     //EnemyUtil을 사용하기 위한 변수
@@ -24,7 +25,7 @@ public class Skill1_Projectile : MonoBehaviour
     {
         isRise = true;
         riseDir = new Vector2(Random.Range(-1.5f, 1.5f), Random.Range(0.3f, 1.5f));
-        Destroy(gameObject, riseTime + 2f);
+        Destroy(gameObject, riseTime + duration);
     }
 
     private void Update()
@@ -68,5 +69,6 @@ public class Skill1_Projectile : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
 }
 

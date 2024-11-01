@@ -23,7 +23,7 @@ public class Projectile : MonoBehaviour
         //포물선 이동을 위해 리지드바디 적용
         rb.AddForce(transform.up * projectileSpeed, ForceMode2D.Impulse);
 
-        //2초후 자기 자신을 삭제함
+        //2초후 자기 자신을 삭제함, 배속일때도 2초면 충분함
         Destroy(gameObject,2f);
     }
 

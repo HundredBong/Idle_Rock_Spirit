@@ -20,6 +20,8 @@ public class Skill3_Meteor : MonoBehaviour
 
     private void Start()
     {
+
+
         StartCoroutine(FireCoroutine());
     }
     private void Update()

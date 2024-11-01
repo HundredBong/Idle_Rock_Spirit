@@ -8,18 +8,29 @@ public class Skill1_Starlight : MonoBehaviour
     [SerializeField, Header("스킬에 사용할 프리팹")] private Skill1_Projectile starlightPrefab;
     [SerializeField, Header("생성할 투사체 개수(10)")] private int starlightCount;
     private float projectileDamage; //투사체의 대미지
-    [SerializeField,Header("기본공격 대비 대미지 배율(1.5)")] private float damageMultiplier;
+    [SerializeField, Header("기본공격 대비 대미지 배율(1.5)")] private float damageMultiplier;
     [SerializeField, Header("투사체가 날아갈 속도")] private float projectileSpeed;
     [SerializeField, Header("투사체가 날아가는 간격")] private float innerInterval;
     [SerializeField, Header("투사체가 올라가는 시간"),
-        Tooltip("기능 구현을 해보고싶어서 그만")] private float riseTime;
+        Tooltip("기능 구현을 해보고싶어서 그만")]
+    private float riseTime;
     [SerializeField, Header("스킬 쿨타임(7)")] private float fireInterval;
+    [SerializeField, Header("스킬 지속시간(2)"),Tooltip("지속시간동안 존재하다가 사라짐")] private float duration;
     private float preFireTime; //쿨타임 계산용 마지막으로 발사한 시간
+
+    //배속때 시간 조절용 변수
+    private float originalInnerInterval;
+    private float originalRiseTime;
+    private float originalFireInterval;
 
     //EnemyUtil을 사용하기 위한 변수
     private Enemy targetEnemy;
     private Vector3 closestEnemyPosition;
     private float closestEnemyDistance;
+    private float originalDuration;
+
+    //UI 쿨타임용 변수
+    public float currentInterval { get { return fireInterval / originalInnerInterval; } }
 
     //기획서 : 돌정령 머리위로 투사체 10개 소환은 그냥 뿅 하고 나타나면 되나요
     //이런거 신경써서 몬스터는 화면 밖에서 스폰되게 했으면서 이건 왜 그냥 뿅 하고 나타나나요
@@ -35,7 +46,14 @@ public class Skill1_Starlight : MonoBehaviour
 
     private void Start()
     {
+        originalInnerInterval = innerInterval;
+        originalRiseTime = riseTime;
+        originalFireInterval = fireInterval;
+        originalDuration = duration;
+
         closestEnemyDistance = EnemyUtility.GetTargetDistance(transform, out targetEnemy);
+
+        preFireTime = fireInterval * (-1);
 
         //스킬을 배웠을 때 사거리 안에 적이 있다면 바로 한번 실행
         if (closestEnemyDistance <= GameManager.Instance.player.attackRange) { Fire(); }
@@ -43,8 +61,10 @@ public class Skill1_Starlight : MonoBehaviour
 
     void Update()
     {
+        SetInterval();
         Debug.Log($"Starlight {fireInterval} : {Time.time}");
         Fire();
+        UIManager.Instance.intervalImages[0].fillAmount = currentInterval;
     }
 
     private void Fire()
@@ -54,7 +74,7 @@ public class Skill1_Starlight : MonoBehaviour
         closestEnemyDistance = EnemyUtility.GetTargetDistance(transform, out targetEnemy);
         Debug.Log($"Starlight 준비됨 {closestEnemyDistance}");
         if (GameManager.Instance.player.attackRange <= closestEnemyDistance) { return; }
-        
+
         StartCoroutine(FireCoroutine());
         preFireTime = Time.time;
     }
@@ -65,11 +85,30 @@ public class Skill1_Starlight : MonoBehaviour
         {
             Debug.Log($"Starlight. {i}번째 코루틴");
             projectileDamage = GameManager.Instance.player.damage * damageMultiplier;
-            Skill1_Projectile proj = Instantiate(starlightPrefab,transform.position, transform.rotation);
+            Skill1_Projectile proj = Instantiate(starlightPrefab, transform.position, transform.rotation);
             proj.projectileDamage = this.projectileDamage;
             proj.projectileSpeed = this.projectileSpeed;
             proj.riseTime = this.riseTime;
+            proj.duration = this.duration;
             yield return new WaitForSeconds(innerInterval);
+        }
+    }
+
+    private void SetInterval()
+    {
+        if (UIManager.Instance.is2xSpeed == true)
+        {
+            fireInterval = originalFireInterval / 2;
+            riseTime = originalRiseTime / 2;
+            innerInterval = originalInnerInterval / 2;
+            duration = originalDuration / 2;
+        }
+        else
+        {
+            fireInterval = originalFireInterval;
+            riseTime = originalRiseTime;
+            innerInterval = originalInnerInterval;
+            duration = originalDuration; 
         }
     }
 }

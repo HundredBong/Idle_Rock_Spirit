@@ -11,13 +11,18 @@ public class Skill4_Thunder : MonoBehaviour
     [SerializeField, Header("기본공격 대비 대미지 배율(1)")] private float damageMultiplier;
     [SerializeField, Header("투사체가 떨어지는 속도")] private float projectileSpeed;
     [SerializeField, Header("투사체가 떨어지는 간격")] private float innerInterval;
-    [SerializeField, Header("스킬 쿨타임(5)"),Tooltip("번개가 다 떨어지고 나서 쿨타임이 돌게 설정해 놓은" +
-        "상태이므로 실제 쿨타임은 쿨타임 + (투사체 간격 * 투사체 개수)")] private float fireInterval;
+    [SerializeField, Header("스킬 쿨타임(5)"), Tooltip("번개가 다 떨어지고 나서 쿨타임이 돌게 설정해 놓은" +
+        "상태이므로 실제 쿨타임은 쿨타임 + (투사체 간격 * 투사체 개수)")]
+    private float fireInterval;
     private float preFireTime; //쿨타임 계산용 마지막으로 발사한 시간
 
     //EnemyUtil을 사용하기 위한 변수
     private Enemy targetEnemy;
     private Vector3 closestEnemyPosition;
+
+    //시간 관련 노가다네 ㄹㅇ루
+    private float originalInnerInterval;
+    private float originalFireInterval;
 
 
     //스프라이트 렌더러로 사기칠 예정
@@ -40,6 +45,10 @@ public class Skill4_Thunder : MonoBehaviour
 
     void Start()
     {
+        originalInnerInterval = innerInterval;
+        originalFireInterval = fireInterval;
+
+        preFireTime = fireInterval * (-1);
         //projectileDamage = GameManager.Instance.player.damage * damageMultiplier;
 
         //거리와 관계 없는 스킬이므로 스킬을 배웠을 때 바로 한번 실행
@@ -52,8 +61,8 @@ public class Skill4_Thunder : MonoBehaviour
         if (GameManager.Instance.enemies != null)
             closestEnemyPosition = EnemyUtility.GetTargetPosition(transform, out targetEnemy);
 
+        SetInterval();
         Fire();
-
     }
 
     private void Fire()
@@ -84,6 +93,18 @@ public class Skill4_Thunder : MonoBehaviour
             yield return new WaitForSeconds(innerInterval);
         }
         //yield return new WaitForSeconds(thunderInterval + (thunderCount * innerInterval));
-
+    }
+    private void SetInterval()
+    {
+        if (UIManager.Instance.is2xSpeed == true)
+        {
+            innerInterval = originalInnerInterval / 2;
+            fireInterval = originalFireInterval / 2;
+        }
+        else
+        {
+            innerInterval = originalInnerInterval;
+            fireInterval = originalFireInterval;
+        }
     }
 }

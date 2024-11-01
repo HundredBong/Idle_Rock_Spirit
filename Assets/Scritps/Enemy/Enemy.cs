@@ -86,8 +86,6 @@ public class Enemy : MonoBehaviour
         enemyProj.damage = this.damage;
 
         preAttackTime = Time.time;
-
-
     }
 
     public void TakeDamage(float damage)

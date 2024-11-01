@@ -14,6 +14,12 @@ public class Skill4_Projectile : MonoBehaviour
     //겹치는 적 동시충돌 방지
     private bool hasCollided = false;
 
+    private void Start()
+    {
+        //투사체 속도가 심하게 빨라서 빗나갈 일은 없지만 혹시 모르니 2초뒤 삭제
+        Destroy(gameObject, 2f);
+    }
+
     private void Update()
     {
         gameObject.transform.Translate(Vector3.down * projectileSpeed * Time.deltaTime);
