@@ -44,8 +44,62 @@ public class ProjectileLuncher : MonoBehaviour
         proj.transform.rotation = gameObject.transform.rotation;
 
         proj.damage = GameManager.Instance.player.damage;
+
+        //확률적으로 대미지를 대미지 + (대미지 * 크리티컬 배율) 로 설정
+        if (GameManager.Instance.player.critlcalChance >= Random.Range(0f, 100f))
+        {
+            proj.damage = GameManager.Instance.player.damage +
+                (GameManager.Instance.player.damage * GameManager.Instance.player.criticalMultiplier / 100);
+        }
+
+        proj.projectileSpeed = this.projectileSpeed;
+
+        //확률적으로 한번 더 메서드 실행
+        if (GameManager.Instance.player.doubleShot >= Random.Range(0f, 100f))
+        {
+            StartCoroutine(DoubleShot());
+        }
+    }
+
+    private IEnumerator DoubleShot()
+    {
+        yield return new WaitForSeconds(0.2f);
+
+        targetEnemy = null;
+        targetDistance = float.MaxValue;
+
+        foreach (Enemy enemy in GameManager.Instance.enemies)
+        {
+            if (enemy == null) { continue; }
+            float distance = Mathf.Abs(enemy.transform.position.x - GameManager.Instance.player.transform.position.x);
+            if (distance < targetDistance)
+            {
+                targetEnemy = enemy;
+                targetDistance = distance;
+                //Debug.Log($"가장 가까운 적 : {targetEnemy.name}");
+                //Debug.Log($"가장 가까운 적 : {Mathf.Abs(targetDistance)}");
+            }
+            Debug.Log($"가장 가까운 적 : {Mathf.Abs(targetDistance)}");
+
+            projectileSpeed = (1.21f) * targetDistance + (3.29f);
+        }
+        Projectile proj = Instantiate(projectile, transform.position, transform.rotation);
+
+        proj.transform.position = gameObject.transform.position;
+        proj.transform.rotation = gameObject.transform.rotation;
+
+        proj.damage = GameManager.Instance.player.damage;
+
+        //확률적으로 대미지를 대미지 + (대미지 * 크리티컬 배율) 로 설정
+        if (GameManager.Instance.player.critlcalChance >= Random.Range(0f, 100f))
+        {
+            proj.damage = GameManager.Instance.player.damage +
+                (GameManager.Instance.player.damage * GameManager.Instance.player.criticalMultiplier / 100);
+        }
+
         proj.projectileSpeed = this.projectileSpeed;
     }
+
 
     private float SerchTarget()
     {

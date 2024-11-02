@@ -3,8 +3,10 @@ using UnityEngine;
 using UnityEngine.UI;
 public class Enemy : MonoBehaviour
 {
-    [SerializeField, Header("체력")] public float health;
-    [Header("최대 체력")] private float maxHealth;
+
+    //기획서 : enemy 크리, 더블, 이속은 테스트하고 결정한다 쳐도 공속은 좀 있었으면 해요
+    [SerializeField, Header("체력(1)")] public float health;
+    [Header("최대 체력(1)")] private float maxHealth;
     [SerializeField, Header("이동 속도")] private float moveSpeed;
     [SerializeField, Header("공격 속도")] private float attackInterval;
     //마지막으로 공격한 시간 
@@ -22,7 +24,6 @@ public class Enemy : MonoBehaviour
     private IEnumerator Start()
     {
         //자기 자신을 리스트에 추가함
-        //TODO: 플레이어가 foreach문으로 리스트를 순회하며 가까운 적 탐색
         GameManager.Instance.enemies.Add(this);
 
         //최대 체력을 현재 체력으로 설정

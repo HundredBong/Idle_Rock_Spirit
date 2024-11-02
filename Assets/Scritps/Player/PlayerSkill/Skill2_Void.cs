@@ -62,7 +62,13 @@ public class Skill2_Void : MonoBehaviour
         if (preFireTime + fireInterval > Time.time) { return; }
         //쿨타임 됐는데 사거리가 안되면 리턴
         closestEnemyDistance = EnemyUtility.GetTargetDistance(transform, out targetEnemy);
-        if (GameManager.Instance.player.attackRange <= closestEnemyDistance) { return; }
+        
+        //projectileLauncher에서 나가므로 플레이어 사거리가 아닌 플레이어 사거리 - 런처 사이의 x좌표만큼 뺀 후 사거리 계산
+
+        if (GameManager.Instance.player.attackRange-Mathf.Abs
+            (GameManager.Instance.player.transform.position.x - 
+                gameObject.transform.position.x) <= closestEnemyDistance)
+        { return; }
 
         projectileDamage = GameManager.Instance.player.damage * damageMultiplier;
 

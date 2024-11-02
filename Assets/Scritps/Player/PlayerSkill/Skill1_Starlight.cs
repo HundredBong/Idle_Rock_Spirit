@@ -64,7 +64,7 @@ public class Skill1_Starlight : MonoBehaviour
         SetInterval();
         Debug.Log($"Starlight {fireInterval} : {Time.time}");
         Fire();
-        UIManager.Instance.intervalImages[0].fillAmount = currentInterval;
+        //UIManager.Instance.intervalImages[0].fillAmount = currentInterval;
     }
 
     private void Fire()

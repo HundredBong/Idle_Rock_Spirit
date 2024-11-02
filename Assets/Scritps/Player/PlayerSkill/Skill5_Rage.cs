@@ -10,26 +10,26 @@ public class Skill5_Rage : MonoBehaviour
     [SerializeField, Header("스킬 지속시간(10)")] private float rageDuration; //레이지 지속시간
 
     private float playerRageDamage; //레이지 대미지
-    private float beforeRageDamage; //원본 대미지
+    private float originalPlayerDamage; //원본 대미지
 
     //저는 배속이 싫어요
     private float originalRageDuration;
     private float originalRageInterval;
 
-
     //기획서 : 유일한 버프기인데 버프기가 지속시간 끝나고 쿨타임이 도나요
     //아니면 버프기 걸자마자 지속시간 상관없이 바로 쿨타임이 도나요
 
-    private IEnumerator Start()
+    //업그레이드 하자마자 바로 적용되도록 공격력 설정을 Update로 변경 및 bool 변수 선언
+    private bool isRage;
+
+    private void Start()
     {
+
+        isRage = false;
 
         originalRageDuration = rageDuration;
         originalRageInterval = rageInterval;
-
-        yield return null;
-
-        playerRageDamage = GameManager.Instance.player.damage * damageMultiplier;
-        beforeRageDamage = GameManager.Instance.player.damage;
+        originalPlayerDamage = GameManager.Instance.player.damage;
 
         StartCoroutine(BoostCoroutine(rageDuration));
     }
@@ -37,17 +37,40 @@ public class Skill5_Rage : MonoBehaviour
     private void Update()
     {
         SetInterval();
+
+        Debug.Log($"플레이어 레이지 대미지 : {playerRageDamage}");
+        Debug.Log($"오리지날 플레이어 대미지 : {originalPlayerDamage}");
+        Debug.Log($"게임매니저 플레이어 대미지 : {GameManager.Instance.player.damage}");
+
+        originalPlayerDamage = GameManager.Instance.player.originalDamage;
+
+        if (isRage == true)
+        {
+            playerRageDamage = originalPlayerDamage * damageMultiplier;
+            GameManager.Instance.player.damage = playerRageDamage;
+            Debug.Log($"레이지 중일때 대미지: {playerRageDamage}");
+            Debug.Log($"레이지 아닐때 대미지: {originalPlayerDamage}");
+
+        }
+        else 
+        {
+            GameManager.Instance.player.damage = originalPlayerDamage;
+            Debug.Log($"기본 대미지: {originalPlayerDamage}");
+        }
     }
 
     private IEnumerator BoostCoroutine(float duration)
     {
         while (true)
         {
-            GameManager.Instance.player.damage = playerRageDamage;
+            isRage = true;
+            yield return null;
+            UIManager.Instance.SetDamageIndicator();
             yield return new WaitForSeconds(duration);
-            GameManager.Instance.player.damage = beforeRageDamage;
+            isRage = false;
+            yield return null;
+            UIManager.Instance.SetDamageIndicator();Ski
             yield return new WaitForSeconds(rageInterval);
-
         }
     }
     private void SetInterval()

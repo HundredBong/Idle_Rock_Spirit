@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Skill1_Projectile : MonoBehaviour
 {
-    internal float projectileDamage; //투사체 대미지
+    public float projectileDamage; //투사체 대미지
     internal float projectileSpeed; //투사체 이동속도
     internal float riseTime; //투사체가 올라가는 시간
     internal float duration; //투사체 지속 시간

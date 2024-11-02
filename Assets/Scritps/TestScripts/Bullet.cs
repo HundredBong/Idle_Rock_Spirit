@@ -23,6 +23,7 @@ public class Bullet : MonoBehaviour
 {
     Rigidbody2D rb;
     public float bulletSpeed;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();

@@ -9,17 +9,25 @@ public class Player : MonoBehaviour
     //공격 범위가 카메라 화면의 3분의 2라고 하셨는데 지금 해상도 2:3 비율에서는 그렇다 치고, 
     //해상도가 달라지면 공격 범위도 달라지나요
     //유니티 좌표같은 정보가 없는 상황에서 1돌정령미터는 정말 적절한 비유라고 생각해요
+    //돌정령 기본공격 쿨타임, 체력, 공격력 등 기본 스탯은 어떻게 설정하면 될까요
+    //앗 있었네 ㅎㅎ ㅈㅅ ㅋㅋ
+    //하지만 더블샷 발동했을때 텀은 없죠?
+    //더블샷에 크리 적용되는지 얘기는 없죠?
+    //"기본값 1.0 = 1 즉, 1.0s로 1초당 1회" 가독성좀 제발
+    //더블샷은 두개를 쏘나요, 두번을 쏘나요 
+    //두개를 쏘면 각도는 씨잇펄 내가 어떻게 계산해
+    //두번을 쏘면 텀은 어떻게 되나요
 
-    [SerializeField, Header("체력")] internal float health;
-    [SerializeField, Header("최대 체력")] internal int maxHealth;
-    [SerializeField, Header("체력 재생")] private float healthRegen;
-    [SerializeField, Header("체력 재생 쿨타임(5)")] private float regenInterval;
-    [SerializeField, Header("공격력")] internal float damage;
-    [SerializeField, Header("치명타 확률")] private int critlcalChance;
-    [SerializeField, Header("치명타 피해")] private int criticalMultiplier;
-    [SerializeField, Header("공격 쿨타임"), Tooltip("기본값 1.0 = / 1.0s 1초당 1회")] private float attackInterval;
-    [SerializeField, Header("더블 샷 확률")] private int doubleShot;
-    [SerializeField, Header("소지금")] private int gold;
+    [SerializeField, Header("체력(5)")] internal float health;
+    [SerializeField, Header("최대 체력(5)")] internal int maxHealth;
+    [SerializeField, Header("체력 재생(0)")] internal float healthRegen;
+    [SerializeField, Header("체력 재생 쿨타임(5)")] internal float regenInterval;
+    [SerializeField, Header("공격력(1)")] internal float damage;
+    [SerializeField, Header("치명타 확률(0)")] internal int critlcalChance;
+    [SerializeField, Header("치명타 피해(100)")] internal float criticalMultiplier;
+    [SerializeField, Header("공격 쿨타임(1)"), Tooltip("기본값 1.0 = / 1.0s 1초당 1회")] internal float attackInterval;
+    [SerializeField, Header("더블 샷 확률(0)")] internal int doubleShot;
+    [SerializeField, Header("소지금")] internal int gold;
     [SerializeField, Header("플레이어 공격 반경")] internal float attackRange;
 
     //마지막으로 체력을 재생한 시간
@@ -33,16 +41,28 @@ public class Player : MonoBehaviour
     private bool attackAble;
 
     //배속 기능 시간 조절용 변수
-    private float originalAttackInterval;
-    private float originalRegenInterval;
+    internal float originalAttackInterval;
+    internal float originalRegenInterval;
 
     private Enemy targetEnemy = null;
     private float targetDistance = float.MaxValue;
 
+    //공격력 증가용 원본 공격력
+    internal float originalDamage;
+
     private void Awake()
     {
         //다른 객체가 참조할 수 있도록 게임매니저의 플레이어를 오브젝트로 설정
-        GameManager.Instance.player = this;
+        //if (GameManager.Instance.player != null)
+            GameManager.Instance.player = this;
+        //else
+        //    Debug.Log("게임매니저의 플레이어가 Null상태임");
+
+
+        //if (UIManager.Instance.player != null)
+            UIManager.Instance.player = this;
+        //else
+        //    Debug.Log("UI매니저의 플레이어가 Null상태임");
     }
 
     private void Start()
@@ -50,25 +70,29 @@ public class Player : MonoBehaviour
         //원본 쿨타임 저장용
         originalAttackInterval = attackInterval;
         originalRegenInterval = regenInterval;
-       
-        if (UIManager.Instance.player != null)
-            UIManager.Instance.player = this;
-        else
-            Debug.Log("UI매니저의 플레이어가 Null상태임");
+
+        originalDamage = damage; 
 
         //런처를 참조할 수 있도록 런처 초기화
         launcher = GameObject.Find("ProjectileLauncher").GetComponent<ProjectileLuncher>();
 
         StartCoroutine(FireCoroutine());
         Debug.Log($"UI매니저 : {UIManager.Instance.name}");
+
+        //초기 업그레이드에 따라 스탯 증가시킴
     }
 
     private void Update()
     {
         HealthRegeneration();
-
         //UI매니저에서 누를때마다 호출할려다가 도저히 안되서 그만
         SetInterval();
+
+        //if (GameManager.Instance.player == null)
+        //    Debug.Log("게임매니저 null");
+        //if (UIManager.Instance.player == null)
+        //    Debug.Log("UI매니저 null");
+
     }
 
     public void TakeDamage(float damage)
@@ -170,7 +194,11 @@ public class Player : MonoBehaviour
                     launcher.Fire();
             }
             //공격 쿨타임동안 대기후 코드 재실행
-            yield return new WaitForSeconds(attackInterval);
+            //?????????????????????????????????????????????????????????????????????????????????
+            //??????????????????????????????????????????????????????????????????????????????????
+            //????????????????????????????????????????????????????????????????????????????????????
+            // 1초를 기준으로 1 / 1.1 일시 약 0.9초마다 발사하게됨 
+            yield return new WaitForSeconds(1 / attackInterval);
         }
 
     }
@@ -183,7 +211,7 @@ public class Player : MonoBehaviour
             regenInterval = originalRegenInterval / 2;
         }
         else
-        { 
+        {
             attackInterval = originalAttackInterval;
             regenInterval = originalRegenInterval;
         }
