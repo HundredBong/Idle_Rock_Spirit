@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Skill_Control : MonoBehaviour
+public class SkillCooltimeManager : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()

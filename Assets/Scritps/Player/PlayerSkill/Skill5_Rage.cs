@@ -69,7 +69,7 @@ public class Skill5_Rage : MonoBehaviour
             yield return new WaitForSeconds(duration);
             isRage = false;
             yield return null;
-            UIManager.Instance.SetDamageIndicator();Ski
+            UIManager.Instance.SetDamageIndicator();
             yield return new WaitForSeconds(rageInterval);
         }
     }

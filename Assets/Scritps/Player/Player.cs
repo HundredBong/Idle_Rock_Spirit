@@ -25,7 +25,7 @@ public class Player : MonoBehaviour
     [SerializeField, Header("공격력(1)")] internal float damage;
     [SerializeField, Header("치명타 확률(0)")] internal int critlcalChance;
     [SerializeField, Header("치명타 피해(100)")] internal float criticalMultiplier;
-    [SerializeField, Header("공격 쿨타임(1)"), Tooltip("기본값 1.0 = / 1.0s 1초당 1회")] internal float attackInterval;
+    [SerializeField, Header("공격 속도(1)"), Tooltip("기본값 1.0 = / 1.0s 1초당 1회")] internal float attackInterval;
     [SerializeField, Header("더블 샷 확률(0)")] internal int doubleShot;
     [SerializeField, Header("소지금")] internal int gold;
     [SerializeField, Header("플레이어 공격 반경")] internal float attackRange;

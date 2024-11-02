@@ -192,7 +192,8 @@ public class UIManager : MonoBehaviour
                 GameManager.Instance.player.criticalMultiplier += 1;
                 break;
             case 5:
-                GameManager.Instance.player.attackInterval -= 0.1f;
+                GameManager.Instance.player.attackInterval += 0.1f;
+                GameManager.Instance.player.originalAttackInterval += 0.1f;
                 break;
             case 6:
                 GameManager.Instance.player.doubleShot += 1;
@@ -231,7 +232,11 @@ public class UIManager : MonoBehaviour
                 upgradeNameTexts[i].text = $"치명타 피해\n  {100 + upgradeLevel[i] * 1}";
                 break;
             case 5:
-                upgradeNameTexts[i].text = $"공격 속도\n  {1 / player.originalAttackInterval}";
+                if (upgradeLevel[i] == 0)
+                    upgradeNameTexts[i].text = $"공격 속도\n  {player.attackInterval}";
+                else
+                    upgradeNameTexts[i].text = $"공격 속도\n  {(1 / player.originalAttackInterval).ToString("F2")}";
+                Debug.Log($"공속 : {1 / player.originalAttackInterval}");
                 break;
             case 6:
                 upgradeNameTexts[i].text = $"더블 샷\n  {upgradeLevel[i] * 1}";
