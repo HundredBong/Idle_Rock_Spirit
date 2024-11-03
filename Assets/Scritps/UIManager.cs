@@ -225,11 +225,11 @@ public class UIManager : MonoBehaviour
 
                 break;
             case 3:
-                upgradeNameTexts[i].text = $"치명타 확률\n  {upgradeLevel[i] * 1}";
+                upgradeNameTexts[i].text = $"치명타 확률\n  {upgradeLevel[i] * 1}%";
 
                 break;
             case 4:
-                upgradeNameTexts[i].text = $"치명타 피해\n  {100 + upgradeLevel[i] * 1}";
+                upgradeNameTexts[i].text = $"치명타 피해\n  {100 + upgradeLevel[i] * 1}%";
                 break;
             case 5:
                 if (upgradeLevel[i] == 0)
@@ -239,7 +239,7 @@ public class UIManager : MonoBehaviour
                 Debug.Log($"공속 : {1 / player.originalAttackInterval}");
                 break;
             case 6:
-                upgradeNameTexts[i].text = $"더블 샷\n  {upgradeLevel[i] * 1}";
+                upgradeNameTexts[i].text = $"더블 샷\n  {upgradeLevel[i] * 1}%";
                 break;
         }
     }

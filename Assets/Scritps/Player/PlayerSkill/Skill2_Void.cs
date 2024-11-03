@@ -41,6 +41,8 @@ public class Skill2_Void : MonoBehaviour
         originalFireInterval = fireInterval;
         originalProjectileDuration = projectileDuration;
 
+        fireInterval = GameManager.Instance.player.skillCooltime[1];
+
         preFireTime = fireInterval * (-1);
 
         //보이드는 투사체가 생성되는 곳에서 생성되야하니 위치를 ProjectileLauncher로 설정하기위해 Find메서드 이용
@@ -52,7 +54,7 @@ public class Skill2_Void : MonoBehaviour
 
     private void Update()
     {
-        SetInterval();
+        //SetInterval();
         Fire();
     }
 
@@ -80,6 +82,9 @@ public class Skill2_Void : MonoBehaviour
         proj.attackInterval = this.attackInterval;
         proj.attackCount = this.attackCount;
         proj.projectileDuration = this.projectileDuration;
+
+        SkillCooltimeManager.Instance.UseSkill(1);
+
         preFireTime = Time.time;
     }
 

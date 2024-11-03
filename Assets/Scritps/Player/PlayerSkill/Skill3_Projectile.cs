@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class Skill3_Projectile : MonoBehaviour
 {
-    public float damage;
-    public float moveSpeed;
-    public float duration;
+    internal float damage;
+    internal float duration;
 
-    public Vector3 rendererStartPos;
+    internal Vector3 rendererStartPos;
     private CircleCollider2D coll;
     private Transform rendererTransform;
 

@@ -43,13 +43,16 @@ public class Skill4_Thunder : MonoBehaviour
     //for문 안에서 소환할 번개 개수만큼 SerchEnemy 돌리고 가까운 enemy 위에 소환
     //소환된 번개 projectile은 Start메서드에서 빠르게 아래로 내려감
 
-    void Start()
+    private IEnumerator Start()
     {
+        yield return null;
+
         originalInnerInterval = innerInterval;
         originalFireInterval = fireInterval;
 
         preFireTime = fireInterval * (-1);
         //projectileDamage = GameManager.Instance.player.damage * damageMultiplier;
+        fireInterval = GameManager.Instance.player.skillCooltime[3];
 
         //거리와 관계 없는 스킬이므로 스킬을 배웠을 때 바로 한번 실행
         Fire();
@@ -61,23 +64,28 @@ public class Skill4_Thunder : MonoBehaviour
         if (GameManager.Instance.enemies != null)
             closestEnemyPosition = EnemyUtility.GetTargetPosition(transform, out targetEnemy);
 
-        SetInterval();
+        //SetInterval();
         Fire();
     }
 
     private void Fire()
     {
-        if (preFireTime + (fireInterval + (thunderCount * innerInterval)) > Time.time) { return; }
+        if (preFireTime + fireInterval > Time.time) { return; }
 
         Debug.Log($"Thunder.Fire메서드 실행됨");
 
         StartCoroutine(FireCoroutine());
+
+        //SkillCooltimeManager.Instance.UseSkill(3);
+
         preFireTime = Time.time;
 
     }
 
     private IEnumerator FireCoroutine()
     {
+        SkillCooltimeManager.Instance.UseSkill(3);
+
         for (int i = 0; i < thunderCount; i++)
         {
             projectileDamage = GameManager.Instance.player.damage * damageMultiplier;

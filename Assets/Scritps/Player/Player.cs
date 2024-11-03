@@ -29,13 +29,13 @@ public class Player : MonoBehaviour
     [SerializeField, Header("더블 샷 확률(0)")] internal int doubleShot;
     [SerializeField, Header("소지금")] internal int gold;
     [SerializeField, Header("플레이어 공격 반경")] internal float attackRange;
-
+    [SerializeField, Header("스킬 쿨타임(7,5,3,5,20)")] internal float[] skillCooltime;
     //마지막으로 체력을 재생한 시간
     private float preRegenTime;
 
     private ProjectileLuncher launcher;
 
-    private List<Skill> skill;
+    public List<Skill> skill;
 
     //공격할수 있는지 판단하기위한 bool변수
     private bool attackAble;
@@ -63,6 +63,9 @@ public class Player : MonoBehaviour
             UIManager.Instance.player = this;
         //else
         //    Debug.Log("UI매니저의 플레이어가 Null상태임");
+
+        skillCooltime = new float[] { 7, 5, 3, 5, 20 };
+
     }
 
     private void Start()
@@ -71,7 +74,8 @@ public class Player : MonoBehaviour
         originalAttackInterval = attackInterval;
         originalRegenInterval = regenInterval;
 
-        originalDamage = damage; 
+        originalDamage = damage;
+
 
         //런처를 참조할 수 있도록 런처 초기화
         launcher = GameObject.Find("ProjectileLauncher").GetComponent<ProjectileLuncher>();

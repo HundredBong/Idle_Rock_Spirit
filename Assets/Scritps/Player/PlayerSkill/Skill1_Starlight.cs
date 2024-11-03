@@ -14,7 +14,8 @@ public class Skill1_Starlight : MonoBehaviour
     [SerializeField, Header("투사체가 올라가는 시간"),
         Tooltip("기능 구현을 해보고싶어서 그만")]
     private float riseTime;
-    [SerializeField, Header("스킬 쿨타임(7)")] private float fireInterval;
+    //[SerializeField, Header("스킬 쿨타임(7)")]
+    private float fireInterval;
     [SerializeField, Header("스킬 지속시간(2)"),Tooltip("지속시간동안 존재하다가 사라짐")] private float duration;
     private float preFireTime; //쿨타임 계산용 마지막으로 발사한 시간
 
@@ -46,6 +47,9 @@ public class Skill1_Starlight : MonoBehaviour
 
     private void Start()
     {
+
+        fireInterval = GameManager.Instance.player.skillCooltime[0];
+
         originalInnerInterval = innerInterval;
         originalRiseTime = riseTime;
         originalFireInterval = fireInterval;
@@ -61,7 +65,7 @@ public class Skill1_Starlight : MonoBehaviour
 
     void Update()
     {
-        SetInterval();
+        //SetInterval();
         Debug.Log($"Starlight {fireInterval} : {Time.time}");
         Fire();
         //UIManager.Instance.intervalImages[0].fillAmount = currentInterval;
@@ -76,6 +80,9 @@ public class Skill1_Starlight : MonoBehaviour
         if (GameManager.Instance.player.attackRange <= closestEnemyDistance) { return; }
 
         StartCoroutine(FireCoroutine());
+
+        SkillCooltimeManager.Instance.UseSkill(0);
+
         preFireTime = Time.time;
     }
 

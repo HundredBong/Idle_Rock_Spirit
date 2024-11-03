@@ -27,16 +27,19 @@ public class Skill5_Rage : MonoBehaviour
 
         isRage = false;
 
+        rageInterval = GameManager.Instance.player.skillCooltime[4];
+
         originalRageDuration = rageDuration;
         originalRageInterval = rageInterval;
         originalPlayerDamage = GameManager.Instance.player.damage;
+
 
         StartCoroutine(BoostCoroutine(rageDuration));
     }
 
     private void Update()
     {
-        SetInterval();
+        //SetInterval();
 
         Debug.Log($"플레이어 레이지 대미지 : {playerRageDamage}");
         Debug.Log($"오리지날 플레이어 대미지 : {originalPlayerDamage}");
@@ -66,11 +69,12 @@ public class Skill5_Rage : MonoBehaviour
             isRage = true;
             yield return null;
             UIManager.Instance.SetDamageIndicator();
+            SkillCooltimeManager.Instance.UseSkill(4);
             yield return new WaitForSeconds(duration);
             isRage = false;
             yield return null;
             UIManager.Instance.SetDamageIndicator();
-            yield return new WaitForSeconds(rageInterval);
+            yield return new WaitForSeconds(rageInterval-duration);
         }
     }
     private void SetInterval()
