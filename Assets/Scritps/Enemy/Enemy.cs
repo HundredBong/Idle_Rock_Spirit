@@ -5,15 +5,18 @@ public class Enemy : MonoBehaviour
 {
 
     //기획서 : enemy 크리, 더블, 이속은 테스트하고 결정한다 쳐도 공속은 좀 있었으면 해요
-    [SerializeField, Header("체력(1)")] public float health;
-    [Header("최대 체력(1)")] private float maxHealth;
-    [SerializeField, Header("이동 속도")] private float moveSpeed;
-    [SerializeField, Header("공격 속도")] private float attackInterval;
+
+    [SerializeField, Header("체력(1)")] internal float health;
+    //[Header("최대 체력(1)")]
+    internal float maxHealth;
+    [SerializeField, Header("이동 속도")] internal float moveSpeed;
+    [SerializeField, Header("공격 속도")] internal float attackInterval;
     //마지막으로 공격한 시간 
     private float preAttackTime;
-    [SerializeField, Header("공격력")] private float damage;
-    [SerializeField, Header("도착 지점 X값")] private float arrivePosX;
+    [SerializeField, Header("공격력")] internal float damage;
+    [SerializeField, Header("도착 지점 X값")] internal float arrivePosX;
     [SerializeField, Header("공격에 사용할 프리팹")] private EnemyProjectile enemyProjectile;
+
     //목표로 이동할 타겟
     private Transform target;
 
@@ -26,8 +29,11 @@ public class Enemy : MonoBehaviour
         //자기 자신을 리스트에 추가함
         GameManager.Instance.enemies.Add(this);
 
-        //최대 체력을 현재 체력으로 설정
-        maxHealth = health;
+        //Debug.Log($"Enemy 참조용 : {GameManager.Instance.currentStage}");
+        //health += GameManager.Instance.currentStage / 10;
+        //maxHealth = health;
+        //damage += GameManager.Instance.currentStage;
+
 
         //1프레임 유예를 둬서 초기화 에러 방지
         yield return null;
@@ -37,6 +43,10 @@ public class Enemy : MonoBehaviour
             Debug.Log($"Player Name : {target.name} (Enemy.Start)");
         else
             Debug.Log("Player가 Null 상태임 (Enemy.Start)");
+
+
+
+
     }
 
     private void Update()
@@ -107,6 +117,8 @@ public class Enemy : MonoBehaviour
     public void Death()
     {
         GameManager.Instance.enemies.Remove(this);
+        GameManager.Instance.player.gold += 10;
+        UIManager.Instance.PlayerMoneyRenewal();
         Destroy(gameObject);
     }
 }

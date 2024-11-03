@@ -205,11 +205,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3692158b79feac948a30d62f73d750f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
-  moveSpeed: 0.5
-  attackInterval: 1
-  damage: 0.5
-  arrivePosX: 1.5
+  health: 0
+  moveSpeed: 0
+  attackInterval: 0
+  damage: 0
+  arrivePosX: 0
   enemyProjectile: {fileID: 8177744077197636405, guid: 85382db2befb1d44ca7456fc28f0250a, type: 3}
   healthBar: {fileID: 2350429312811877258}
 --- !u!1 &3437024038440570876

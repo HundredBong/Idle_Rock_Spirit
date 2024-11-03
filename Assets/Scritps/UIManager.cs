@@ -11,7 +11,7 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance { get { return instance; } }
 
     internal Player player;
-
+    [Header("플레이어 소지금")] public Text playerMoney;
     [Header("플레이어 체력바")] public Image playerHealthImage;
     [Header("배속 조절용 버튼")] public Button gameSpeedButton;
     [Header("배속 조절용 텍스트")] public Text gameSpeedText;
@@ -41,6 +41,13 @@ public class UIManager : MonoBehaviour
     //공격속도가 레벨당 0.1 상승이면 오히려 공격속도가 느려지지 않나요
     //계산식을 1/interval로 수정
     //스킬 밑에 공격력 3 이라고 적혀있는 부분은 원본 공격력을 표시하나요 레이지때는 공격력을 증가시켜서 표시하나요
+    //스킬 배울때 이미 배웠으면 나가기 창 어디있나요
+    //해금에 필요한 골드 정보, 스킬 쿨타임 정보는 어디있나요
+    //스킬 관련 텍스트 적는데 이거 왜 스타라이트만 있나요 나머지 텍스트는 제가 창작했어요으으윽흑흑
+    //스킬도 강화 플로우 차트처럼 골드 모자라면 회색으로 표시하면 되나요
+
+
+
 
     private void Awake()
     {
@@ -83,7 +90,8 @@ public class UIManager : MonoBehaviour
             SetPrice(i);
         }
 
-        PlayerMoneyCheck();
+        PlayerMoneyCheckInUpgreade();
+        PlayerMoneyRenewal();
     }
 
     private void Update()
@@ -131,7 +139,7 @@ public class UIManager : MonoBehaviour
     }
 
     //업데이트에서 돌리지말고 플레이어 골드량에 변동이 있을때만 호출하기
-    public void PlayerMoneyCheck()
+    public void PlayerMoneyCheckInUpgreade()
     {
         for (int i = 0; i < upgradePrice.Count; i++)
         {
@@ -167,7 +175,8 @@ public class UIManager : MonoBehaviour
         SetPlayerStatus(num);
         SetPrice(num);
         SetDamageIndicator();
-        PlayerMoneyCheck();
+        PlayerMoneyCheckInUpgreade();
+        PlayerMoneyRenewal();
     }
 
     public void SetPlayerStatus(int i)
@@ -247,5 +256,11 @@ public class UIManager : MonoBehaviour
     public void SetDamageIndicator()
     {
         playerDamageIndicator.text = $"공격력 {GameManager.Instance.player.damage}";
+    }
+
+    //몬스터가 Destroy될 때, 업그레이드 할 때, 스킬 배울 때 호출
+    public void PlayerMoneyRenewal()
+    {
+        playerMoney.text = $"G {GameManager.Instance.player.gold}";
     }
 }

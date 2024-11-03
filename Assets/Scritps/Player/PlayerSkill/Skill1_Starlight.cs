@@ -45,8 +45,9 @@ public class Skill1_Starlight : MonoBehaviour
     //썬더랑 비슷하게 코루틴을 돌려서 순차적으로 생성
     //생성만 담당하고 날아가는건 Projectile에서 위로 한번 올라간후 Invoke메서드로 enemy로 날아가도록함
 
-    private void Start()
+    private IEnumerator Start()
     {
+        yield return null;
 
         fireInterval = GameManager.Instance.player.skillCooltime[0];
 

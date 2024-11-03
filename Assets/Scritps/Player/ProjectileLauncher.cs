@@ -49,7 +49,7 @@ public class ProjectileLuncher : MonoBehaviour
         if (GameManager.Instance.player.critlcalChance >= Random.Range(0f, 100f))
         {
             proj.damage = GameManager.Instance.player.damage +
-                (GameManager.Instance.player.damage * GameManager.Instance.player.criticalMultiplier / 100);
+                (GameManager.Instance.player.damage * (GameManager.Instance.player.criticalMultiplier / 100));
         }
 
         proj.projectileSpeed = this.projectileSpeed;

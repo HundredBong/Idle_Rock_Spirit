@@ -5,7 +5,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     //런처에서 설정할 대미지
-    internal float damage;
+    [SerializeField]internal float damage;
     //런처에서 설정할 투사체 속도
     internal float projectileSpeed;
     //겹치는 적 동시충돌 방지

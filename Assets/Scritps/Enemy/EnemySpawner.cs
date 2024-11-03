@@ -4,24 +4,34 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [Header("생성할 enemy 프리팹")]public GameObject enemyPrefab;
-    [SerializeField,Header("생성될 적의 수")]public int enemyCount;
+    [Header("생성할 enemy 프리팹")] public Enemy enemyPrefab;
+    [SerializeField, Header("생성될 적의 수")] public int enemyCount;
     [SerializeField, Header("생성될 X좌표 범위")] private Vector2 randomPosX;
     [SerializeField, Header("생성될 Y좌표 범위")] private Vector2 randomPosY;
 
+    [SerializeField, Header("체력(1)")] internal float health;
+    internal float maxHealth;
+    [SerializeField, Header("이동 속도(0.5)")] internal float moveSpeed;
+    [SerializeField, Header("공격 속도(1)")] internal float attackInterval;
+    [SerializeField, Header("공격력(1)")] internal float damage;
+    [SerializeField, Header("도착 지점 X값(1.5)")] internal float arrivePosX;
+
     private Coroutine spawnCoroutine;
+    private float increase;
 
     private void Start()
     {
-        
+        increase = -1;
     }
 
     private void Update()
     {
         if (GameManager.Instance.enemies.Count == 0)
         {
+            increase++;
             Spawn();
         }
+        Debug.Log($"increase : {increase}");
     }
 
     private void Spawn()
@@ -35,7 +45,13 @@ public class EnemySpawner : MonoBehaviour
                 transform.position.y + spawnPosY);
 
             //생성된 랜덤 좌표에 enemy 생성
-            Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+            Enemy enemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+            enemy.health = this.health + (increase / 10);
+            enemy.maxHealth = enemy.health;
+            enemy.moveSpeed = this.moveSpeed;
+            enemy.attackInterval = this.attackInterval;
+            enemy.damage = this.damage + increase;
+            enemy.arrivePosX = this.arrivePosX;
         }
     }
 }
