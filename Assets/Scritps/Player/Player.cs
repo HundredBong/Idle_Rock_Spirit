@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -17,9 +19,11 @@ public class Player : MonoBehaviour
     //더블샷은 두개를 쏘나요, 두번을 쏘나요 
     //두개를 쏘면 각도는 씨잇펄 내가 어떻게 계산해
     //두번을 쏘면 텀은 어떻게 되나요
+    //플레이어 이동모션 나올때 enemy이속은 그대로니까 좀 머저리같아서 
+    //애니메이션 나오는동안 enemy의 이속을 두배로 했읍니다
 
     [SerializeField, Header("체력(5)")] internal float health;
-    [SerializeField, Header("최대 체력(5)")] internal int maxHealth;
+    [SerializeField, Header("최대 체력(5)")] internal float maxHealth;
     [SerializeField, Header("체력 재생(0)")] internal float healthRegen;
     [SerializeField, Header("체력 재생 쿨타임(5)")] internal float regenInterval;
     [SerializeField, Header("공격력(1)")] internal float damage;
@@ -50,22 +54,27 @@ public class Player : MonoBehaviour
     //공격력 증가용 원본 공격력
     internal float originalDamage;
 
+    //애니메이션 컨트롤용
+    internal Animator anim;
+
+
     private void Awake()
     {
         //다른 객체가 참조할 수 있도록 게임매니저의 플레이어를 오브젝트로 설정
         //if (GameManager.Instance.player != null)
-            GameManager.Instance.player = this;
+        GameManager.Instance.player = this;
         //else
         //    Debug.Log("게임매니저의 플레이어가 Null상태임");
 
 
         //if (UIManager.Instance.player != null)
-            UIManager.Instance.player = this;
+        UIManager.Instance.player = this;
         //else
         //    Debug.Log("UI매니저의 플레이어가 Null상태임");
 
         skillCooltime = new float[] { 7, 5, 3, 5, 20 };
 
+        anim = GetComponent<Animator>();
     }
 
     private void Start()
@@ -76,7 +85,7 @@ public class Player : MonoBehaviour
 
         originalDamage = damage;
 
-
+        maxHealth = health;
         //런처를 참조할 수 있도록 런처 초기화
         launcher = GameObject.Find("ProjectileLauncher").GetComponent<ProjectileLuncher>();
 
@@ -99,6 +108,18 @@ public class Player : MonoBehaviour
     private void Update()
     {
         HealthRegeneration();
+
+        SerchTarget();
+
+
+        if (attackRange <= targetDistance)
+        {
+            anim.SetBool("isMove", true);
+        }
+        else
+        {
+            anim.SetBool("isMove", false);
+        }
         //UI매니저에서 누를때마다 호출할려다가 도저히 안되서 그만
         //SetInterval();
 
@@ -181,8 +202,16 @@ public class Player : MonoBehaviour
                 //Debug.Log($"가장 가까운 적 : {targetEnemy.name}");
                 Debug.Log($"가장 가까운 적 : {Mathf.Abs(targetDistance)}");
             }
-        }
 
+            if (attackRange <= distance)
+            {
+                anim.SetBool("isMove", true);
+            }
+            else
+            {
+                anim.SetBool("isMove", false);
+            }
+        }
         return targetDistance;
     }
 
@@ -191,7 +220,7 @@ public class Player : MonoBehaviour
 
         while (true)
         {
-            SerchTarget();
+            //SerchTarget();
 
             if (targetDistance <= attackRange)
                 attackAble = true;
@@ -232,7 +261,7 @@ public class Player : MonoBehaviour
     public void ActivateSkill(int i)
     {
         //스킬이 활성화되지 않은 상태라면 스킬을 활성화시켜줌
-        //Debug.Log("왜 호출됨 시발");
+        //Debug.Log("왜 호출됨 ㅅ발");
         if (skillObjects[i].activeSelf == false)
             skillObjects[i].SetActive(true);
     }

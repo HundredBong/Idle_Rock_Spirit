@@ -46,6 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 371bf84e107e00e47b89cc7f44e9ee7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  projectileDamage: 0
+  particlePrefab: {fileID: 3313302304890075756, guid: 1412650ffadc4bd43aa8849ed52ff70f, type: 3}
 --- !u!58 &7157745710353741552
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -154,12 +156,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 154122315, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
+  m_Sprite: {fileID: 21300012, guid: 7ab74e659e1f0a34d9cfec21c478fc12, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.57, y: 0.51}
+  m_Size: {x: 0.25, y: 0.29}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

@@ -27,18 +27,18 @@ public class Projectile : MonoBehaviour
         Destroy(gameObject,2f);
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        if (hasCollided == true) { return; }
+    //private void OnCollisionEnter2D(Collision2D other)
+    //{
+    //    if (hasCollided == true) { return; }
 
-        if (other.collider.TryGetComponent(out Enemy enemy))
-        {
-            hasCollided = true;
-            //enemy의 TakeDamage 메서드 실행후 삭제
-            enemy.TakeDamage(damage);
-            Destroy(gameObject);
-        }
-    }
+    //    if (other.collider.TryGetComponent(out Enemy enemy))
+    //    {
+    //        hasCollided = true;
+    //        //enemy의 TakeDamage 메서드 실행후 삭제
+    //        enemy.TakeDamage(damage);
+    //        Destroy(gameObject);
+    //    }
+    //}
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -46,6 +46,7 @@ public class Projectile : MonoBehaviour
 
         if (other.TryGetComponent(out Enemy enemy))
         {
+            hasCollided = true;
             //enemy의 TakeDamage 메서드 실행후 삭제
             enemy.TakeDamage(damage);
             Destroy(gameObject);
