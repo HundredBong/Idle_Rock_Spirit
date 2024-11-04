@@ -11,7 +11,9 @@ public class Skill1_Projectile : MonoBehaviour
     internal float duration; //투사체 지속 시간
     private Vector2 riseDir; //처음에 위로 올라갈 방향
 
-    [SerializeField, Header("파티클 효과")] private ParticleSystem particlePrefab; 
+
+    [SerializeField, Header("명중했을때 파티클")] private ParticleSystem particlePrefabHit;
+    [SerializeField, Header("생성될때 파티클")] private ParticleSystem particlePrefabSpawn;
 
     //EnemyUtil을 사용하기 위한 변수
     private Enemy targetEnemy;
@@ -28,6 +30,8 @@ public class Skill1_Projectile : MonoBehaviour
         isRise = true;
         riseDir = new Vector2(Random.Range(-1.5f, 1.5f), Random.Range(0.3f, 1.5f));
         Destroy(gameObject, riseTime + duration);
+        ParticleSystem spawnPar = Instantiate(particlePrefabSpawn, transform);
+        spawnPar.Play();
     }
 
     private void Update()
@@ -68,7 +72,7 @@ public class Skill1_Projectile : MonoBehaviour
         {
             hasCollided = true;
 
-            ParticleSystem par = Instantiate(particlePrefab, other.ClosestPoint(other.transform.position), Quaternion.identity);
+            ParticleSystem par = Instantiate(particlePrefabHit, other.ClosestPoint(other.transform.position), Quaternion.identity);
             par.Play();
             //Destroy(par, 0.4f);
             enemy.TakeDamage(projectileDamage);

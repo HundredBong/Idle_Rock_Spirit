@@ -11,6 +11,8 @@ public class Skill4_Projectile : MonoBehaviour
     public float projectileDamage;
     public float projectileSpeed;
 
+    [SerializeField, Header("명중했을때 파티클")] private ParticleSystem particlePrefabHit;
+
     //겹치는 적 동시충돌 방지
     private bool hasCollided = false;
 
@@ -32,6 +34,8 @@ public class Skill4_Projectile : MonoBehaviour
         if (other.gameObject.TryGetComponent(out Enemy enemy))
         {
             hasCollided = true;
+            ParticleSystem parHit =Instantiate(particlePrefabHit,other.ClosestPoint(other.transform.position),Quaternion.identity);
+            parHit.Play();
             Debug.Log("ThundeProj. OnTriggerEnter2D 조건문 만족");
             enemy.TakeDamage(projectileDamage);
             Destroy(gameObject);

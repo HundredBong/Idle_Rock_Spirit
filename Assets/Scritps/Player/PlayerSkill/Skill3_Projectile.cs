@@ -11,6 +11,8 @@ public class Skill3_Projectile : MonoBehaviour
     private CircleCollider2D coll;
     private Transform rendererTransform;
 
+    [SerializeField, Header("명중했을때 파티클")] private ParticleSystem particlePrefabHit;
+
     private void Awake()
     {
         coll = GetComponent<CircleCollider2D>();
@@ -23,14 +25,10 @@ public class Skill3_Projectile : MonoBehaviour
     //생성된 위치에서 일정 시간 후에 일정 범위내의 적에게 대미지를 주고 사라짐
     private void Start()
     {
+
         StartCoroutine(Explosion());
         //StartCoroutine(DisableCoroutine());
         Destroy(gameObject, duration + 0.1f);
-    }
-
-    private IEnumerator DisableCoroutine()
-    {
-        yield return new WaitForSeconds(duration);
     }
 
     IEnumerator Explosion()
@@ -55,6 +53,7 @@ public class Skill3_Projectile : MonoBehaviour
             //Lerp 메서드를 사용해서 시작점과 원점까지의 선형 보간을 통해 위치계산
             //t값에 따라 위치가 변화함, 즉 애니메이션이 진행될수록 렌더러의 위치가 이동됨
             Vector2 curRendPos = Vector2.Lerp(rendererStartPos, Vector2.zero, t);
+
             //계산된 위치를 렌더러의 로컬 포지션으로 설정함.
             //이를 통해서 렌더러가 이동하는듯한 효과를 줌
             rendererTransform.localPosition = curRendPos;
@@ -72,6 +71,13 @@ public class Skill3_Projectile : MonoBehaviour
                 enemy.TakeDamage(damage);
             }
         }
+
+
+        ParticleSystem parHit = Instantiate(particlePrefabHit);
+        parHit.transform.position = new Vector2(transform.position.x, transform.position.y - 0.5f);
+        parHit.Play();
+
+
         Destroy(gameObject);
     }
 }

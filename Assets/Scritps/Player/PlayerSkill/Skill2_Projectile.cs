@@ -14,6 +14,9 @@ public class Skill2_Projectile : MonoBehaviour
     //오버랩용 캡슐 콜라이더
     private CircleCollider2D coll;
 
+    [SerializeField, Header("명중했을때 파티클")] private ParticleSystem particlePrefabHit;
+    [SerializeField, Header("생성될때 파티클")] private ParticleSystem particlePrefabSpawn;
+
     private void Awake()
     {
         coll = GetComponent<CircleCollider2D>();
@@ -22,6 +25,8 @@ public class Skill2_Projectile : MonoBehaviour
     private void Start()
     {
         Destroy(gameObject, projectileDuration);
+        ParticleSystem spawnPar = Instantiate(particlePrefabSpawn, transform);
+        spawnPar.Play();
     }
 
     private void Update()
@@ -38,6 +43,11 @@ public class Skill2_Projectile : MonoBehaviour
         {
             if (ContactedEnemy.TryGetComponent(out Enemy enemy))
             {
+                ParticleSystem hitPar = Instantiate(particlePrefabHit, other.ClosestPoint(other.transform.position),
+                    Quaternion.identity);
+
+                hitPar.Play();
+
                 enemy.TakeDamage(projectileDamage);
                 attackCount--;
                 if (attackCount <= 0)
