@@ -11,6 +11,8 @@ public class Skill1_Projectile : MonoBehaviour
     internal float duration; //투사체 지속 시간
     private Vector2 riseDir; //처음에 위로 올라갈 방향
 
+    [SerializeField, Header("파티클 효과")] private ParticleSystem particlePrefab; 
+
     //EnemyUtil을 사용하기 위한 변수
     private Enemy targetEnemy;
     private Vector3 closestEnemyPosition;
@@ -65,6 +67,10 @@ public class Skill1_Projectile : MonoBehaviour
         if (other.TryGetComponent(out Enemy enemy))
         {
             hasCollided = true;
+
+            ParticleSystem par = Instantiate(particlePrefab, other.ClosestPoint(other.transform.position), Quaternion.identity);
+            par.Play();
+            //Destroy(par, 0.4f);
             enemy.TakeDamage(projectileDamage);
             Destroy(gameObject);
         }

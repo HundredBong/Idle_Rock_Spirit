@@ -8,7 +8,7 @@ public class Skill5_Rage : MonoBehaviour
     [SerializeField, Header("스킬 쿨타임(20)"), Tooltip("지속시간이 끝난 뒤 쿨타임이 도니까 실제 쿨타임이랑 다름")]
     private float rageInterval;
     [SerializeField, Header("스킬 지속시간(10)")] private float rageDuration; //레이지 지속시간
-
+    [SerializeField, Header("레이지 파티클")] private ParticleSystem rageParticle;
     private float playerRageDamage; //레이지 대미지
     private float originalPlayerDamage; //원본 대미지
 
@@ -49,6 +49,7 @@ public class Skill5_Rage : MonoBehaviour
 
         if (isRage == true)
         {
+            
             playerRageDamage = originalPlayerDamage * damageMultiplier;
             GameManager.Instance.player.damage = playerRageDamage;
             Debug.Log($"레이지 중일때 대미지: {playerRageDamage}");
@@ -57,6 +58,7 @@ public class Skill5_Rage : MonoBehaviour
         }
         else 
         {
+            
             GameManager.Instance.player.damage = originalPlayerDamage;
             Debug.Log($"기본 대미지: {originalPlayerDamage}");
         }
@@ -68,11 +70,13 @@ public class Skill5_Rage : MonoBehaviour
         {
             isRage = true;
             yield return null;
+            rageParticle.Play();
             UIManager.Instance.SetDamageIndicator();
             SkillCooltimeManager.Instance.UseSkill(4);
             yield return new WaitForSeconds(duration);
             isRage = false;
             yield return null;
+            rageParticle.Stop();
             UIManager.Instance.SetDamageIndicator();
             yield return new WaitForSeconds(rageInterval-duration);
         }

@@ -48,7 +48,7 @@ public class EnemySpawner : MonoBehaviour
             Enemy enemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
             enemy.health = this.health + (increase / 10);
             enemy.maxHealth = enemy.health;
-            enemy.moveSpeed = this.moveSpeed;
+            //enemy.moveSpeed = this.moveSpeed;
             enemy.attackInterval = this.attackInterval;
             enemy.damage = this.damage + increase;
             enemy.arrivePosX = this.arrivePosX;

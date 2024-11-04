@@ -143,19 +143,19 @@ public class UIManager : MonoBehaviour
     {
         for (int i = 0; i < upgradePrice.Count; i++)
         {
-            if (GameManager.Instance.player.gold <= upgradePrice[0])
+            if (GameManager.Instance.player.gold >= upgradePrice[i])
             {
                 //소지금이 가격보다 적다면
                 //버튼 [0]를 비활성화하고 숨기기 이미지[0]을 활성화
                 //아니면 버튼[0]활성화
 
-                upgradeButtons[i].gameObject.SetActive(false);
-                hideUpgradeButtonImages[i].gameObject.SetActive(true);
+                upgradeButtons[i].gameObject.SetActive(true);
+                hideUpgradeButtonImages[i].gameObject.SetActive(false);
             }
             else
             {
-                upgradeButtons[i].gameObject.SetActive(true);
-                hideUpgradeButtonImages[i].gameObject.SetActive(false);
+                upgradeButtons[i].gameObject.SetActive(false);
+                hideUpgradeButtonImages[i].gameObject.SetActive(true);
             }
         }
 
@@ -173,10 +173,10 @@ public class UIManager : MonoBehaviour
         upgradeLevel[num]++;
         GameManager.Instance.player.gold -= upgradePrice[num];
         SetPlayerStatus(num);
-        SetPrice(num);
         SetDamageIndicator();
         PlayerMoneyCheckInUpgreade();
         PlayerMoneyRenewal();
+        SetPrice(num);
     }
 
     public void SetPlayerStatus(int i)
