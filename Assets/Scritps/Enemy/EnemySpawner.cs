@@ -17,7 +17,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField, Header("도착 지점 X값(1.5)")] internal float arrivePosX;
 
     private Coroutine spawnCoroutine;
-    private float increase;
+    internal float increase;
 
     private void Start()
     {
