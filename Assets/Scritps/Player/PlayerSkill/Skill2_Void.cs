@@ -49,7 +49,7 @@ public class Skill2_Void : MonoBehaviour
         projectileLauncherPos = GameObject.Find("ProjectileLauncher").GetComponent<Transform>();
         transform.position = projectileLauncherPos.position;
         
-        if (closestEnemyDistance <= GameManager.Instance.player.attackRange) { Fire(); }
+        //if (closestEnemyDistance <= GameManager.Instance.player.attackRange) { Fire(); }
     }
 
     private void Update()

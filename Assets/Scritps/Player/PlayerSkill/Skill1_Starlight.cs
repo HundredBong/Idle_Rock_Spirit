@@ -58,10 +58,11 @@ public class Skill1_Starlight : MonoBehaviour
 
         closestEnemyDistance = EnemyUtility.GetTargetDistance(transform, out targetEnemy);
 
-        preFireTime = fireInterval * (-1);
 
         //스킬을 배웠을 때 사거리 안에 적이 있다면 바로 한번 실행
-        if (closestEnemyDistance <= GameManager.Instance.player.attackRange) { Fire(); }
+        //어짜피 배웠을때쯤 쿨타임 이상 시간이 지나게 되있으니 의미없음
+        //preFireTime = fireInterval * (-1);
+        //if (closestEnemyDistance <= GameManager.Instance.player.attackRange) { Fire(); }
     }
 
     void Update()

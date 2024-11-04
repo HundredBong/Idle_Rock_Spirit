@@ -55,7 +55,7 @@ public class Skill4_Thunder : MonoBehaviour
         fireInterval = GameManager.Instance.player.skillCooltime[3];
 
         //거리와 관계 없는 스킬이므로 스킬을 배웠을 때 바로 한번 실행
-        Fire();
+        //Fire();
     }
 
     void Update()
