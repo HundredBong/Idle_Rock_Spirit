@@ -14,8 +14,11 @@ public class BackgroundFlow : MonoBehaviour
         }
         if (gameObject.transform.position.x < -19.9f)
         {
-            Debug.Log("배경 이동용");
-            transform.position = new Vector2(-2.2f, 2.1f);
+            if (GameManager.Instance.player.health >= 0)
+            {
+                Debug.Log("배경 이동용");
+                transform.position = new Vector2(-2.2f, 2.1f);
+            }
         }
     }
 }

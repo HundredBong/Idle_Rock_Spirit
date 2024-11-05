@@ -163,11 +163,17 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        //크리 확률이 100이상일시 버튼 비활성화
+        //크리,더블 확률이 100이상일시 버튼 비활성화
         if (100 <= upgradeLevel[3])
         {
             upgradeButtons[3].gameObject.SetActive(false);
             hideUpgradeButtonImages[3].gameObject.SetActive(true);
+        }
+
+        if (100 <= upgradeLevel[6])
+        {
+            upgradeButtons[6].gameObject.SetActive(false);
+            hideUpgradeButtonImages[6].gameObject.SetActive(true);
         }
     }
 
