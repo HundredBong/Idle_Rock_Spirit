@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
     //런처에서 설정할 대미지
+    //디버그용으로 직렬화
     [SerializeField]internal float damage;
     //런처에서 설정할 투사체 속도
     internal float projectileSpeed;
@@ -12,6 +14,8 @@ public class Projectile : MonoBehaviour
     private bool hasCollided = false;
 
     private Rigidbody2D rb;
+
+    [SerializeField, Header("명중했을때 파티클")] private ParticleSystem particlePrefabHit;
 
     private void Awake()
     {
@@ -47,6 +51,10 @@ public class Projectile : MonoBehaviour
         if (other.TryGetComponent(out Enemy enemy))
         {
             hasCollided = true;
+
+            ParticleSystem par = Instantiate(particlePrefabHit, other.ClosestPoint(other.transform.position), Quaternion.identity);
+            par.Play();
+
             //enemy의 TakeDamage 메서드 실행후 삭제
             enemy.TakeDamage(damage);
             Destroy(gameObject);

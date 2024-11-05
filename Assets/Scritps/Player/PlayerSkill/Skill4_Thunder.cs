@@ -70,6 +70,8 @@ public class Skill4_Thunder : MonoBehaviour
 
     private void Fire()
     {
+        if (GameManager.Instance.player.health <= 0) return;
+
         if (preFireTime + fireInterval > Time.time) { return; }
 
         Debug.Log($"Thunder.Fire메서드 실행됨");

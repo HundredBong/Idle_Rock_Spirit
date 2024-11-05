@@ -22,11 +22,11 @@ public class Player : MonoBehaviour
     //플레이어 이동모션 나올때 enemy이속은 그대로니까 좀 머저리같아서 
     //애니메이션 나오는동안 enemy의 이속을 두배로 했읍니다
 
-    [SerializeField, Header("체력(5)")] internal float health;
-    [SerializeField, Header("최대 체력(5)")] internal float maxHealth;
+    [SerializeField, Header("체력(5 - 5)")] internal float health;
+    [SerializeField, Header("최대 체력(0)")] internal float maxHealth;
     [SerializeField, Header("체력 재생(0)")] internal float healthRegen;
     [SerializeField, Header("체력 재생 쿨타임(5)")] internal float regenInterval;
-    [SerializeField, Header("공격력(1)")] internal float damage;
+    [SerializeField, Header("공격력(1 - 1)")] internal float damage;
     [SerializeField, Header("치명타 확률(0)")] internal int critlcalChance;
     [SerializeField, Header("치명타 피해(100)")] internal float criticalMultiplier;
     [SerializeField, Header("공격 속도(1)"), Tooltip("기본값 1.0 = / 1.0s 1초당 1회")] internal float attackInterval;

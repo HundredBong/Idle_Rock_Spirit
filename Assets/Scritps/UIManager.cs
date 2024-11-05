@@ -31,6 +31,8 @@ public class UIManager : MonoBehaviour
     [Header("플레이어 공격력 인디케이터")] public Text playerDamageIndicator;
     [Header("플레이어 소지금 인디케이터")] public Text playerGoldIndicator;
 
+    [Header("타이틀 패널")] public Image titlePanel;
+
     //배속 관련 bool변수
     internal bool is2xSpeed;
 
@@ -211,7 +213,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void SetPrice(int i)
+    public void SetPrice(int i)
     {
         upgradePrice[i] = (upgradeLevel[i] + 1) * 10;
 

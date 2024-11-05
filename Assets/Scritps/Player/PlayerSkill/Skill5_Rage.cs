@@ -69,17 +69,19 @@ public class Skill5_Rage : MonoBehaviour
 
         while (true)
         {
-            isRage = true; //레이지 활성화로 공격력 증가시킴
-            parSpawn.gameObject.SetActive(true); //파티클 활성화
-            UIManager.Instance.SetDamageIndicator(); //하단 대미지 인디케이터 갱신
-            SkillCooltimeManager.Instance.UseSkill(4); //스킬 쿨타임 갱신
+            if (GameManager.Instance.player.health >= 0)
+            {
+                isRage = true; //레이지 활성화로 공격력 증가시킴
+                parSpawn.gameObject.SetActive(true); //파티클 활성화
+                UIManager.Instance.SetDamageIndicator(); //하단 대미지 인디케이터 갱신
+                SkillCooltimeManager.Instance.UseSkill(4); //스킬 쿨타임 갱신
 
-            yield return new WaitForSeconds(duration); //지속시간동안 대기
+                yield return new WaitForSeconds(duration); //지속시간동안 대기
 
-            isRage = false; //레이지 비활성화로 공격력 복구
-            parSpawn.gameObject.SetActive(false); //파티클 비활성화, Stop하니 Destroy되서 참조 불가
-            UIManager.Instance.SetDamageIndicator(); //대미지 인디케이터 갱신
-
+                isRage = false; //레이지 비활성화로 공격력 복구
+                parSpawn.gameObject.SetActive(false); //파티클 비활성화, Stop하니 Destroy되서 참조 불가
+                UIManager.Instance.SetDamageIndicator(); //대미지 인디케이터 갱신
+            }
             yield return new WaitForSeconds(rageInterval-duration); //쿨타임 - 지속시간동안 대기후 다시 실행
         }
     }

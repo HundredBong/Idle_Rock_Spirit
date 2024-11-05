@@ -56,6 +56,8 @@ public class Skill3_Meteor : MonoBehaviour
 
     private void Fire()
     {
+        if (GameManager.Instance.player.health <= 0) return;
+
         //쿨타임 재보고 안되면 리턴
         if (preFireTime + fireInterval > Time.time) { return; }
 

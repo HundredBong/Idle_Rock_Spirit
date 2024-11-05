@@ -12,6 +12,7 @@ public class EscapePanel : MonoBehaviour
     public void OnClickYes()
     {
         Application.Quit();
+        
     }
 
     public void OnClickNo()

@@ -75,6 +75,8 @@ public class Skill1_Starlight : MonoBehaviour
 
     private void Fire()
     {
+        if (GameManager.Instance.player.health <= 0) return;
+
         if (preFireTime + fireInterval > Time.time) { return; }
 
         closestEnemyDistance = EnemyUtility.GetTargetDistance(transform, out targetEnemy);

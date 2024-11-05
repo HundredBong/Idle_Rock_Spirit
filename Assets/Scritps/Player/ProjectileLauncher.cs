@@ -20,6 +20,8 @@ public class ProjectileLuncher : MonoBehaviour
     }
     public void Fire()
     {
+        if(GameManager.Instance.player.health<=0) return;
+
         targetEnemy = null;
         targetDistance = float.MaxValue;
 

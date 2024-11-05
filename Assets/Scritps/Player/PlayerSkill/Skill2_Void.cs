@@ -60,6 +60,8 @@ public class Skill2_Void : MonoBehaviour
 
     private void Fire()
     {
+        if (GameManager.Instance.player.health <= 0) return;
+
         //쿨타임 재보고 안되면 리턴
         if (preFireTime + fireInterval > Time.time) { return; }
         //쿨타임 됐는데 사거리가 안되면 리턴

@@ -1,21 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GameOverPanel : MonoBehaviour
 {
-    [SerializeField, Header("게임 오버 Yes버튼")]private Button gmaeOverButtonYes;
+    [SerializeField, Header("게임 오버 Yes버튼")] private Button gmaeOverButtonYes;
     [SerializeField, Header("게임 오버 No버튼")] private Button gmaeOverButtonNo;
 
     private EnemySpawner spawner;
-
+    //private TitlePanel titlePanell;
     //1. 플
+
+    private float playerMaxHp;
 
     private void Awake()
     {
         //enemySpawner의 값을 변경해야 하므로 가져옴
         spawner = GameObject.Find("EnemySpawner").GetComponent<EnemySpawner>();
+        //titlePanell = GameObject.Find("StartTitlePanel").GetComponent<TitlePanel>();
     }
 
     private void Start()
@@ -33,12 +37,52 @@ public class GameOverPanel : MonoBehaviour
 
     public void OnClickNo()
     {
-        //앱 종료
+        ////몬스터 제거
+        //GameManager.Instance.RetryGame();
+        //gameObject.SetActive(false);
+
+        ////타이틀 화면 활성화 및 각종 업그레이드, 스킬 초기화
+        //Time.timeScale = 0f;
+
+        ////하드코딩
+        //GameManager.Instance.player.damage = 1;
+        //GameManager.Instance.player.health = 5;
+        //GameManager.Instance.player.maxHealth = GameManager.Instance.player.health;
+
+        //GameManager.Instance.player.healthRegen = 0;
+        //GameManager.Instance.player.critlcalChance = 0;
+        //GameManager.Instance.player.criticalMultiplier = 0;
+        //GameManager.Instance.player.attackInterval = 1;
+        //GameManager.Instance.player.doubleShot = 0;
+
+        //for (int i = 0; i < UIManager.Instance.upgradeLevel.Count; i++)
+        //{
+        //UIManager.Instance.upgradeLevel[i] = 0;
+        //UIManager.Instance.SetPrice(i);
+        //}
+
+        //UIManager.Instance.upgradeLevel[0] = 1;
+        //UIManager.Instance.upgradeLevel[2] = 1;
+
+        //UIManager.Instance.SetPrice(0);
+        //UIManager.Instance.SetPrice(1);
+
+        //spawner.increase = -1;
+
+        //GameManager.Instance.player.gold = 0;
+
+        //UIManager.Instance.PlayerHPRenewal();
+        //UIManager.Instance.PlayerMoneyRenewal();
+
+        //titlePanell.gameObject.SetActive(true);
         Application.Quit();
     }
-    
+
     public void OnclickYes()
     {
+        //임시로 플레이어의 체력을 저장
+        playerMaxHp = GameManager.Instance.player.maxHealth;
+
         Time.timeScale = 1f;
         //enemy의 강화만 줄여야 하니까 enemy Spawn의 값을 변경
         //리스트가 비워질 때 ++로 0이 됨
@@ -49,16 +93,27 @@ public class GameOverPanel : MonoBehaviour
         //매우 그럴싸하니까 당장 실행하기
         GameManager.Instance.RetryGame();
 
-        //플레이어의 체력을 다시 회복
-        GameManager.Instance.player.health = GameManager.Instance.player.maxHealth;
+        GameManager.Instance.player.health = 9999;
+        GameManager.Instance.player.maxHealth = 9999;
 
-        //창 닫아줌
         GameManager.Instance.player.gold = 0;
+        UIManager.Instance.PlayerMoneyCheckInUpgreade();
+
+        Invoke("DelayHealthRegen", 1.5f);
+
+        gameObject.SetActive(false);
+    }
+
+    //enemy는 날아가는데 enemy의 투사체가 안날아가서 나오자마자 게임종료패널 재호출됨
+    //일시적으로 무적으로 만들기
+    public void DelayHealthRegen()
+    {
+        //임시로 저장된 값을 불러옴
+        GameManager.Instance.player.health = playerMaxHp;
+        GameManager.Instance.player.maxHealth = GameManager.Instance.player.health;
 
         //UI창 업데이트
         UIManager.Instance.PlayerHPRenewal();
         UIManager.Instance.PlayerMoneyRenewal();
-
-        gameObject.SetActive(false);
     }
 }
