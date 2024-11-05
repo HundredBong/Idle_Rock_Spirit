@@ -155,6 +155,7 @@ public class Player : MonoBehaviour
         //Destroy(gameObject);
 
         UIManager.Instance.gameOverPanel.ActivatePanel();
+        anim.SetBool("isDeath", true);
     }
 
     private void HealthRegeneration()
@@ -263,7 +264,6 @@ public class Player : MonoBehaviour
     public void ActivateSkill(int i)
     {
         //스킬이 활성화되지 않은 상태라면 스킬을 활성화시켜줌
-        //Debug.Log("왜 호출됨 ㅅ발");
         if (skillObjects[i].activeSelf == false)
             skillObjects[i].SetActive(true);
     }

@@ -80,6 +80,7 @@ public class UIManager : MonoBehaviour
         OnClickUpgrade(1);
         OnClickUpgrade(0);
 
+        //gameOverPanel.ActivatePanel();
 
         Debug.Log($"플레이어 Start : {player.originalDamage}");
 

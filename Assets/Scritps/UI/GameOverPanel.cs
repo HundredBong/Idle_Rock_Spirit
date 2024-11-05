@@ -8,6 +8,7 @@ public class GameOverPanel : MonoBehaviour
 {
     [SerializeField, Header("게임 오버 Yes버튼")] private Button gmaeOverButtonYes;
     [SerializeField, Header("게임 오버 No버튼")] private Button gmaeOverButtonNo;
+    [SerializeField, Header("Continue 파티클")] private ParticleSystem particlePrefab;
 
     private EnemySpawner spawner;
     //private TitlePanel titlePanell;
@@ -99,13 +100,18 @@ public class GameOverPanel : MonoBehaviour
         GameManager.Instance.player.gold = 0;
         UIManager.Instance.PlayerMoneyCheckInUpgreade();
 
-        Invoke("DelayHealthRegen", 1.5f);
+        ParticleSystem parResurrection = Instantiate(particlePrefab, GameManager.Instance.player.transform.position, Quaternion.identity);
+        parResurrection.Play();
+        GameManager.Instance.player.anim.SetBool("isDeath", false);
 
+        Invoke("DelayHealthRegen", 1.5f);
+        
         gameObject.SetActive(false);
     }
 
     //enemy는 날아가는데 enemy의 투사체가 안날아가서 나오자마자 게임종료패널 재호출됨
     //일시적으로 무적으로 만들기
+    //이게 다 쓸데없이 enemy의 공격을 투명한 투사체로 해서 그렇읍니다.
     public void DelayHealthRegen()
     {
         //임시로 저장된 값을 불러옴
