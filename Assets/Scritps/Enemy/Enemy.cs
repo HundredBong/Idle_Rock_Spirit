@@ -157,6 +157,7 @@ public class Enemy : MonoBehaviour
 
     public void Death()
     {
+        GameManager.Instance.player.gold += 10;
         moveSpeed = 0;
         enhancedMoveSpeed = 0;
         originalMoveSpeed = 0;
@@ -165,12 +166,8 @@ public class Enemy : MonoBehaviour
         Debug.Log($"애니메이션 재생 {animationLength}");
         coll.enabled = false;
         GameManager.Instance.enemies.Remove(this);
-        GameManager.Instance.player.gold += 10;
         UIManager.Instance.PlayerMoneyRenewal();
         UIManager.Instance.PlayerMoneyCheckInUpgreade();
         Destroy(gameObject, animationLength+0.05f);
-
-
-
     }
 }

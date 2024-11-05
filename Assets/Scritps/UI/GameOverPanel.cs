@@ -24,16 +24,25 @@ public class GameOverPanel : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void OnClickYes()
+    public void ActivatePanel()
+    {
+        //플레이어의 Death메서드에서 호출됨
+        //Time.timeScale = 0.1f;
+        gameObject.SetActive(true);
+    }
+
+    public void OnClickNo()
     {
         //앱 종료
         Application.Quit();
     }
     
-    public void OnclickNo()
+    public void OnclickYes()
     {
+        Time.timeScale = 1f;
         //enemy의 강화만 줄여야 하니까 enemy Spawn의 값을 변경
-        spawner.increase = 0;
+        //리스트가 비워질 때 ++로 0이 됨
+        spawner.increase = -1;
 
         //게임매니저를 통해서 맵에 존재하는 모든 enemy를 제거해야 하는데 이때 골드는 어떡하지 아,
         //않이면 그냥 싹 다 Death메서드 실행시키게 하고 패널티랍시고 플레이어 골드를 0으로 맞추는건
@@ -45,6 +54,10 @@ public class GameOverPanel : MonoBehaviour
 
         //창 닫아줌
         GameManager.Instance.player.gold = 0;
+
+        //UI창 업데이트
+        UIManager.Instance.PlayerHPRenewal();
+        UIManager.Instance.PlayerMoneyRenewal();
 
         gameObject.SetActive(false);
     }

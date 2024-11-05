@@ -153,6 +153,8 @@ public class Player : MonoBehaviour
         //를 하면 게임매니저에서 이거 참조 못하니까 큰일남
         //고로 애니메이션만 재생하는걸로
         //Destroy(gameObject);
+
+        UIManager.Instance.gameOverPanel.ActivatePanel();
     }
 
     private void HealthRegeneration()

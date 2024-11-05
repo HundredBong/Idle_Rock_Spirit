@@ -47,6 +47,7 @@ public class UIManager : MonoBehaviour
     //스킬도 강화 플로우 차트처럼 골드 모자라면 회색으로 표시하면 되나요
 
 
+    public GameOverPanel gameOverPanel;
 
 
     private void Awake()
