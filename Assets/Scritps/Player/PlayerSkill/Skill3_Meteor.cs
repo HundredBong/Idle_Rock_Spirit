@@ -31,8 +31,8 @@ public class Skill3_Meteor : MonoBehaviour
 
     private void Start()
     {
+        //밸런스용 주석 처리
         fireInterval = GameManager.Instance.player.skillCooltime[2];
-        //StartCoroutine(FireCoroutine());
     }
     private void Update()
     {

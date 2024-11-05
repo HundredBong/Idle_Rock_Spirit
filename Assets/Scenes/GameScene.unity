@@ -13488,7 +13488,12 @@ MonoBehaviour:
   doubleShot: 0
   gold: 0
   attackRange: 4.8
-  skillCooltime: []
+  skillCooltime:
+  - 12
+  - 8
+  - 15
+  - 10
+  - 20
   skills:
   - skillPrefab: {fileID: 3404641139990303384, guid: 83c6e23ee56f2c040b6e7872a8d28c43, type: 3}
   - skillPrefab: {fileID: 8520284296175384668, guid: 2553d236433e83846a348ce5c8b6b3f1, type: 3}

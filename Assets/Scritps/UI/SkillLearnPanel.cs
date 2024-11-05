@@ -57,7 +57,7 @@ public class SkillLearnPanel : MonoBehaviour
                     explanationText.text = $"사거리 내에 적이 있을 경우 돌정령의 머리 위로 투사체를 10개 소환하여 돌정령과 가장 가까운 몬스터에게 " +
                          $"날아가 공격하며 사라진다. (쿨타임 {GameManager.Instance.player.skillCooltime[i]}초)\n\n해금하시겠습니까? (G{skillPrice[i]})";
                     //만약 스킬을 배우지 않았지만 소지금이 모자라면
-                    if (GameManager.Instance.player.gold <= skillPrice[i])
+                    if (GameManager.Instance.player.gold < skillPrice[i])
                     {
                         //버튼을 가리는 이미지를 활성화
                         hideImage.gameObject.SetActive(true);
@@ -79,7 +79,7 @@ public class SkillLearnPanel : MonoBehaviour
                         $" 구체는 적에게 닿을시 정해진 횟수의 피해를 주고 사라진다. (쿨타임 {GameManager.Instance.player.skillCooltime[i]}초)" +
                         $"\n\n해금하시겠습니까? (G{skillPrice[i]})";
                     //만약 스킬을 배우지 않았지만 소지금이 모자라면
-                    if (GameManager.Instance.player.gold <= skillPrice[i])
+                    if (GameManager.Instance.player.gold < skillPrice[i])
                     {
                         //버튼을 가리는 이미지를 활성화
                         hideImage.gameObject.SetActive(true);
@@ -99,7 +99,7 @@ public class SkillLearnPanel : MonoBehaviour
                     explanationText.text = $"사거리 내에 적이 있을 경우 가장 가까운 적을 향해 메테오를 낙하시키고 범위 피해를 준다. (쿨타임 {GameManager.Instance.player.skillCooltime[i]}초)" +
                         $"\n\n해금하시겠습니까? (G{skillPrice[i]})";
                     //만약 스킬을 배우지 않았지만 소지금이 모자라면
-                    if (GameManager.Instance.player.gold <= skillPrice[i])
+                    if (GameManager.Instance.player.gold < skillPrice[i])
                     {
                         //버튼을 가리는 이미지를 활성화
                         hideImage.gameObject.SetActive(true);
@@ -122,7 +122,7 @@ public class SkillLearnPanel : MonoBehaviour
                     explanationText.text = $"사거리에 관계 없이 돌정령과 가까운 적을 향해 벼락을 8번 낙하시킨다. (쿨타임 {GameManager.Instance.player.skillCooltime[i]}초)" +
                         $"\n\n해금하시겠습니까? (G{skillPrice[i]})";
                     //만약 스킬을 배우지 않았지만 소지금이 모자라면
-                    if (GameManager.Instance.player.gold <= skillPrice[i])
+                    if (GameManager.Instance.player.gold < skillPrice[i])
                     {
                         //버튼을 가리는 이미지를 활성화
                         hideImage.gameObject.SetActive(true);
@@ -142,7 +142,7 @@ public class SkillLearnPanel : MonoBehaviour
                     explanationText.text = "돌정령의 공격력이 10초간 2배로 상승하게된다. " +
                         $"(쿨타임 {GameManager.Instance.player.skillCooltime[i]}초)\n\n해금하시겠습니까? (G{skillPrice[i]})";
                     //만약 스킬을 배우지 않았지만 소지금이 모자라면
-                    if (GameManager.Instance.player.gold <= skillPrice[i])
+                    if (GameManager.Instance.player.gold < skillPrice[i])
                     {
                         //버튼을 가리는 이미지를 활성화
                         hideImage.gameObject.SetActive(true);

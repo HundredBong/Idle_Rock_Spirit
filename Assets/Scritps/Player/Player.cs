@@ -72,7 +72,8 @@ public class Player : MonoBehaviour
         //else
         //    Debug.Log("UI매니저의 플레이어가 Null상태임");
 
-        skillCooltime = new float[] { 7, 5, 3, 5, 20 };
+        //스킬 쿨타임 
+        //skillCooltime = new float[] { 7, 5, 3, 5, 20 };
 
         anim = GetComponent<Animator>();
     }
