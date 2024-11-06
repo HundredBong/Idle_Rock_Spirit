@@ -13,7 +13,7 @@ public class EnemyProjectile : MonoBehaviour
     private void Start()
     {
         //target = GameManager.Instance.player.transform;
-        //projectileSpeed = 10f;
+        projectileSpeed = 1f;
         //혹시 타겟에게 명중하지 않았을 경우를 대비하여 1초뒤 자기 자신을 제거하는 코드 추가
         Destroy(gameObject, 1f);
     }

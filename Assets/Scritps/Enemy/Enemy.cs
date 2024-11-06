@@ -83,8 +83,10 @@ public class Enemy : MonoBehaviour
 
         //플레이어와 enemy의 x축의 거리를 측정함
         distance = GameManager.Instance.player.transform.position.x - transform.position.x;
+
         //Debug.Log($"거리 : {distance}");
         //if (Mathf.Abs(distance) >= GameManager.Instance.player.attackRange)
+
         if(GameManager.Instance.player.anim.GetBool("isMove") == true)
         {
             moveSpeed = enhancedMoveSpeed;
@@ -125,9 +127,13 @@ public class Enemy : MonoBehaviour
     private void Attack()
     {
         //사망 애니메이션 재생을 위해 체력관련 조건문 추가
-        if (preAttackTime + attackInterval > Time.time && 0 <= health)
+        //체력이 0 이상이면 리턴되게 되어있었는데 여태까지 왜 작동한거지
+        if (preAttackTime + attackInterval > Time.time)// && 0 <= health)
             { return; }
-        
+
+        //enemy의 health가 0이될 때 투사체를 매 프레임 생성하던 문제를 해결
+        if(health<=0) { return; }
+
         preAttackTime = Time.time;
 
         //조건을 만족하면 공격 애니메이션 재생

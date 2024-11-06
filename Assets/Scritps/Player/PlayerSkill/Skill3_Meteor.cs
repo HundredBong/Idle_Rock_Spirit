@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Skill3_Meteor : MonoBehaviour
@@ -37,29 +38,54 @@ public class Skill3_Meteor : MonoBehaviour
     private void Update()
     {
         closestEnemyPosition = EnemyUtility.GetTargetPosition(transform, out targetEnemy);
+        closestEnemyDistance = EnemyUtility.GetTargetDistance(transform, out targetEnemy);
+        //메테오 스포너는 항상 가장 가까운 적을 찾고 그 좌표에 위치함
+        gameObject.transform.position = closestEnemyPosition;
 
-        if (GameManager.Instance.enemies != null)
-            gameObject.transform.position = closestEnemyPosition;
+        //가장 가까운 적의 거리가 플레이어의 사거리보다 크면
+        if (GameManager.Instance.player.attackRange <= closestEnemyDistance)
+        {
+            //오브젝트의 위치를 공격 사거리 끝에 위치시킴
+            //메테오가 0,0에 생성되던 문제 해결용 
+            transform.position = new Vector2(GameManager.Instance.player.transform.position.x +
+                GameManager.Instance.player.attackRange+0.1f, GameManager.Instance.player.transform.position.y);
+        }
+        
+
+        ////혹시나 없으면 Player의 공격 사거리 끝거리에 위치시킴
+        ////메테오가 0,0에 생성되던 문제 해결용 
+        //if (GameManager.Instance.enemies == null)
+        //{
+        //    gameObject.transform.position =
+        //        new Vector2(GameManager.Instance.player.transform.position.x + GameManager.Instance.player.attackRange,
+        //        GameManager.Instance.player.transform.position.y);
+        //}
 
         Fire();
 
+        if (transform.position == Vector3.zero)
+        {
+            Debug.LogError("메테오 스포너의 위치가 zero임");
+        }
+
     }
 
-    private IEnumerator FireCoroutine()
-    {
-        while (true)
-        {
-            Fire();
-            yield return new WaitForSeconds(fireInterval);
-        }
-    }
+    //private IEnumerator FireCoroutine()
+    //{
+    //    while (true)
+    //    {
+    //        Fire();
+    //        yield return new WaitForSeconds(fireInterval);
+    //    }
+    //}
 
     private void Fire()
     {
-        if (GameManager.Instance.player.health <= 0) return;
-
         //쿨타임 재보고 안되면 리턴
         if (preFireTime + fireInterval > Time.time) { return; }
+
+        //플레이어의 체력이 0이하면 리턴
+        if (GameManager.Instance.player.health <= 0) { return; }
 
         float dis = Vector3.Distance(transform.position, GameManager.Instance.player.transform.position);
 
@@ -69,23 +95,29 @@ public class Skill3_Meteor : MonoBehaviour
             return;
         }
 
+        //생성할 투사체의 대미지를 플레이어 대미지 * 배율로 설정
         projectileDamage = GameManager.Instance.player.damage * damageMultiplier;
 
-        Skill3_Projectile proj = Instantiate(projtilePrefab);
+        Skill3_Projectile proj = Instantiate(projtilePrefab, new Vector2(transform.position.x - 0.5f, transform.position.y),
+            Quaternion.Euler(0, 0, Random.Range(10, 50)));
 
         proj.damage = this.projectileDamage;
         //거리 = 속도 x 시간
         //시간 = 거리 / 속도
         //속도 = 거리 / 시간
-        proj.duration = 1 / projectileSpeed; //시간 = 속도 / 거리
-        proj.rendererStartPos = this.rendererStartPos;
-        //proj.transform.localScale = proj.transform.localScale * projectileScale;
-        //부모 오브젝트 기준으로 랜덤한 위치에서 생성
-        proj.transform.localPosition = new Vector2(transform.position.x - 0.5f, transform.position.y);
-        proj.transform.rotation = Quaternion.Euler(0, 0, Random.Range(10, 50));
+        proj.duration = 1 / projectileSpeed; //시간 = 속도 / 거리  
+        proj.rendererStartPos = this.rendererStartPos; //메테오 스폰 위치를 설정
 
+        //투사체가 생성될 위치를 몬스터의 x축 좌표 - 0.5로 예상 이동 경로에 생성
+        //proj.transform.position = new Vector2(transform.position.x - 0.5f, transform.position.y);
+
+        //z좌표를 랜덤으로 하여 떨어지는 각도를 다양하게 조절
+        //proj.transform.rotation = Quaternion.Euler(0, 0, Random.Range(10, 50));
+
+        //쿨타임 타이머 활성화
         SkillCooltimeManager.Instance.UseSkill(2);
 
+        //마지막으로 공격한 시간 초기화
         preFireTime = Time.time;
     }
 }
