@@ -84,7 +84,10 @@ public class GameOverPanel : MonoBehaviour
         //임시로 플레이어의 체력을 저장
         playerMaxHp = GameManager.Instance.player.maxHealth;
 
-        Time.timeScale = 1f;
+        if (UIManager.Instance.is2xSpeed == true)
+            Time.timeScale = 2f;
+        else
+            Time.timeScale = 1f;
         //enemy의 강화만 줄여야 하니까 enemy Spawn의 값을 변경
         //리스트가 비워질 때 ++로 0이 됨
         spawner.increase = -1;

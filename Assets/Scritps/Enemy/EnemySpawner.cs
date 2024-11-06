@@ -47,12 +47,13 @@ public class EnemySpawner : MonoBehaviour
             //积己等 罚待 谅钎俊 enemy 积己
             Enemy enemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
             //enemy.health = this.health + (increase / 10);
-            enemy.health = this.health + (increase * 10);
+            enemy.health = this.health + (increase * 5);
 
             enemy.maxHealth = enemy.health;
             enemy.moveSpeed = this.moveSpeed;
             enemy.attackInterval = this.attackInterval;
-            enemy.damage = this.damage + increase;
+            //enemy.damage = this.damage + increase;
+            enemy.damage = this.damage + (increase * 0.5f);
             enemy.arrivePosX = this.arrivePosX;
         }
     }

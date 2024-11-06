@@ -27,8 +27,8 @@ public class Skill5_Rage : MonoBehaviour
 
         rageInterval = GameManager.Instance.player.skillCooltime[4];
 
-        originalRageDuration = rageDuration;
-        originalRageInterval = rageInterval;
+        //originalRageDuration = rageDuration;
+        //originalRageInterval = rageInterval;
         originalPlayerDamage = GameManager.Instance.player.damage;
 
 
@@ -39,9 +39,9 @@ public class Skill5_Rage : MonoBehaviour
     {
         //SetInterval();
 
-        Debug.Log($"플레이어 레이지 대미지 : {playerRageDamage}");
-        Debug.Log($"오리지날 플레이어 대미지 : {originalPlayerDamage}");
-        Debug.Log($"게임매니저 플레이어 대미지 : {GameManager.Instance.player.damage}");
+        //Debug.Log($"플레이어 레이지 대미지 : {playerRageDamage}");
+        //Debug.Log($"오리지날 플레이어 대미지 : {originalPlayerDamage}");
+        //Debug.Log($"게임매니저 플레이어 대미지 : {GameManager.Instance.player.damage}");
 
         originalPlayerDamage = GameManager.Instance.player.originalDamage;
 
@@ -49,14 +49,14 @@ public class Skill5_Rage : MonoBehaviour
         {
             playerRageDamage = originalPlayerDamage * damageMultiplier;
             GameManager.Instance.player.damage = playerRageDamage;
-            Debug.Log($"레이지 중일때 대미지: {playerRageDamage}");
-            Debug.Log($"레이지 아닐때 대미지: {originalPlayerDamage}");
+            Debug.Log($"레이지가 활성화 됨 : {playerRageDamage}");
+            //Debug.Log($"레이지 아닐때 대미지: {originalPlayerDamage}");
 
         }
         else 
         {
             GameManager.Instance.player.damage = originalPlayerDamage;
-            Debug.Log($"기본 대미지: {originalPlayerDamage}");
+            Debug.Log($"레이지가 비활성화 됨 : {originalPlayerDamage}");
         }
     }
 
@@ -73,15 +73,25 @@ public class Skill5_Rage : MonoBehaviour
             {
                 isRage = true; //레이지 활성화로 공격력 증가시킴
                 parSpawn.gameObject.SetActive(true); //파티클 활성화
-                UIManager.Instance.SetDamageIndicator(); //하단 대미지 인디케이터 갱신
+
                 SkillCooltimeManager.Instance.UseSkill(4); //스킬 쿨타임 갱신
+
+                //변경된 대미지를 바로 반영하지 못하고 이전 대미지를 반영하는
+                //문제가 있어서 1프레임 유예를 준 후 대미지를 갱신시킴
+                yield return null;
+                UIManager.Instance.SetDamageIndicator(); //증가시킨 대미지로 하단 대미지 인디케이터 갱신
+                Debug.Log("(레이지)인디케이터 갱신됨 (ture)");
 
                 yield return new WaitForSeconds(duration); //지속시간동안 대기
 
                 isRage = false; //레이지 비활성화로 공격력 복구
                 parSpawn.gameObject.SetActive(false); //파티클 비활성화, Stop하니 Destroy되서 참조 불가
-                UIManager.Instance.SetDamageIndicator(); //대미지 인디케이터 갱신
+                
+                yield return null; 
+                UIManager.Instance.SetDamageIndicator(); //감소시킨 대미지로 하단 대미지  인디케이터 갱신
+                Debug.Log("인디케이터 갱신됨 (false)");
             }
+
             yield return new WaitForSeconds(rageInterval-duration); //쿨타임 - 지속시간동안 대기후 다시 실행
         }
     }

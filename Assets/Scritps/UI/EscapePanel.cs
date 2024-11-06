@@ -17,7 +17,11 @@ public class EscapePanel : MonoBehaviour
 
     public void OnClickNo()
     {
-        Time.timeScale = 1f;
+        if (UIManager.Instance.is2xSpeed == true)
+            Time.timeScale = 2f;
+        else
+            Time.timeScale = 1f;
+
         gameObject.SetActive(false);
     }
 }
