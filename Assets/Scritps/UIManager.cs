@@ -147,9 +147,16 @@ public class UIManager : MonoBehaviour
     {
         for (int i = 0; i < upgradePrice.Count; i++)
         {
-            if (GameManager.Instance.player.gold >= upgradePrice[i])
+            if (GameManager.Instance.player.health <= 0)
             {
-                //소지금이 가격보다 적다면
+                Debug.Log("업그레이드 체크 호출됨");
+                upgradeButtons[i].gameObject.SetActive(false);
+                hideUpgradeButtonImages[i].gameObject.SetActive(true);
+            }
+
+            else if (GameManager.Instance.player.gold >= upgradePrice[i])
+            {
+                //소지금이 가격보다 적다면 or 플레이어의 체력이 0 이하라면 
                 //버튼 [0]를 비활성화하고 숨기기 이미지[0]을 활성화
                 //아니면 버튼[0]활성화
 
@@ -161,6 +168,7 @@ public class UIManager : MonoBehaviour
                 upgradeButtons[i].gameObject.SetActive(false);
                 hideUpgradeButtonImages[i].gameObject.SetActive(true);
             }
+
         }
 
         //크리,더블 확률이 100이상일시 버튼 비활성화

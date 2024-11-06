@@ -28,7 +28,7 @@ public class Skill1_Projectile : MonoBehaviour
     private void Start()
     {
         isRise = true;
-        riseDir = new Vector2(Random.Range(-1.5f, 1.5f), Random.Range(0.3f, 1.5f));
+        riseDir = new Vector2(Random.Range(-1.5f, 0.5f), Random.Range(0.3f, 1.5f));
         Destroy(gameObject, riseTime + duration);
         ParticleSystem spawnPar = Instantiate(particlePrefabSpawn, transform);
         spawnPar.Play();
@@ -40,7 +40,7 @@ public class Skill1_Projectile : MonoBehaviour
         //업데이트에서 방향 잡으면 올라갈때 계속 방향이 바뀌므로 Start에서 한번만 실행
         if (isRise == true)
         {
-            transform.Translate(riseDir * (projectileSpeed / 10) * Time.deltaTime);
+            transform.Translate(riseDir * (projectileSpeed / 15) * Time.deltaTime);
             Invoke("SetRise", riseTime);
             //Update로 매 프레임 위로 상승하다가 Invoke 메서드로 인해 bool변수 변경으로 아래 코드 실행
         }

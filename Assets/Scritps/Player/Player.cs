@@ -17,7 +17,6 @@ public class Player : MonoBehaviour
     //더블샷에 크리 적용되는지 얘기는 없죠?
     //"기본값 1.0 = 1 즉, 1.0s로 1초당 1회" 가독성좀 제발
     //더블샷은 두개를 쏘나요, 두번을 쏘나요 
-    //두개를 쏘면 각도는 씨잇펄 내가 어떻게 계산해
     //두번을 쏘면 텀은 어떻게 되나요
     //플레이어 이동모션 나올때 enemy이속은 그대로니까 좀 머저리같아서 
     //애니메이션 나오는동안 enemy의 이속을 두배로 했읍니다
@@ -156,6 +155,7 @@ public class Player : MonoBehaviour
         //Destroy(gameObject);
 
         UIManager.Instance.gameOverPanel.ActivatePanel();
+        UIManager.Instance.PlayerMoneyCheckInUpgreade();
         anim.SetBool("isDeath", true);
     }
 

@@ -30,6 +30,9 @@ public class SkillLearnPanel : MonoBehaviour
         //5. No버튼을 누르면 창을 닫음
 
         //Yes버튼에서 사용할 수 있게 인덱스값을 저장, 매 호출시 바뀜
+
+        if (GameManager.Instance.player.health <= 0) { return; }
+
         skillIndex = i;
         Debug.Log("스킬 배우기 패널 버튼 클릭");
         //창을 띄우고 버튼 두개를 활성화
