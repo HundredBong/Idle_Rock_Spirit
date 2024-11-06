@@ -13,7 +13,7 @@ public class EnemyProjectile : MonoBehaviour
     private void Start()
     {
         //target = GameManager.Instance.player.transform;
-        projectileSpeed = 1f;
+        projectileSpeed = 10f;
         //혹시 타겟에게 명중하지 않았을 경우를 대비하여 1초뒤 자기 자신을 제거하는 코드 추가
         Destroy(gameObject, 1f);
     }
@@ -38,6 +38,8 @@ public class EnemyProjectile : MonoBehaviour
         //플레이어와 접촉하면
         if (other.TryGetComponent(out Player player))
         {
+
+            Debug.Log("enemy의 투사체가 명중");
             //플레이어의 TakeDamage메서드 실행하고
             player.TakeDamage(damage);
             
